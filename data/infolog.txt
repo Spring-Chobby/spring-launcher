@@ -1,0 +1,195 @@
+Using configuration source: "C:\Users\tzaeru\Documents\ChobbyWrapper/data\springsettings.cfg"
+Using additional configuration source: "C:\Users\tzaeru\Documents\My Games\Spring\springsettings.cfg"
+Using additional configuration source: "C:\Users\tzaeru\Documents\Spring\springsettings.cfg"
+Available log sections: Net, CregSerializer, Sound, BumpWater, Texture, ModelRenderContainer, ArchiveScanner, FarTextureHandler, DecalsDrawerGL4, RoamMeshDrawer, OBJParser, KeyBindings, VFS, Path, AutohostInterface, DynWater, Font, Shader, Model, Piece, GameServer, CSMFGroundTextures, LuaSocket, SkyBox, GroundMoveType
+Enabled log sections: Sound(Notice)
+Enable or disable log sections using the LogSections configuration key
+  or the SPRING_LOG_SECTIONS environment variable (both comma separated).
+  Use "none" to disable the default log sections.
+LogOutput initialized.
+============== <User Config> ==============
+  AllowDeferredMapRendering = 1
+  AllowDeferredModelRendering = 1
+  BumpWaterAnisotropy = 2
+  BumpWaterBlurReflection = 1
+  BumpWaterDepthBits = 32
+  BumpWaterReflection = 2
+  BumpWaterTexSizeReflection = 256
+  CamMode = 1
+  CrossAlpha = 0
+  CubeTexSizeReflection = 256
+  CubeTexSizeSpecular = 256
+  DefaultLuaMenu = Chobby $VERSION
+  DualScreenMiniMapOnLeft = 1
+  EdgeMoveDynamic = 0
+  EdgeMoveWidth = 0.003
+  FPSFOV = 90
+  FSAALevel = 2
+  FontSize = 18
+  Fullscreen = 0
+  GrassDetail = 9
+  GroundDecals = 5
+  GroundDetail = 150
+  GroundScarAlphaFade = 1
+  HangTimeout = 5
+  HardwareCursor = 1
+  InitialNetworkTimeout = 0
+  InputTextGeo = 0.26 0.73 0.02 0.028
+  LastSelectedMap = BlueBend-v01
+  LastSelectedMod = Balanced Annihilation V9.46
+  LastSelectedScript = Player Only: Testing Sandbox
+  MaxNanoParticles = 2300
+  MaxParticles = 25000
+  MaxSounds = 32
+  MaximumTransmissionUnit = 0
+  MiddleClickScrollSpeed = -0.001
+  MiniMapMarker = 0
+  MouseDragScrollThreshold = 0
+  OverheadMaxHeightFactor = 1.39999998
+  OverheadScrollSpeed = 50
+  ReconnectTimeout = 0
+  ScreenshotCounter = 13
+  ScrollWheelSpeed = -25
+  ShadowMapSize = 6144
+  Shadows = 1
+  ShowFPS = 1
+  ShowPlayerInfo = 0
+  ShowSpeed = 1
+  SpringData = C:\Users\tzaeru\Documents\My Games\Spring\
+  TreeRadius = 1500
+  UnitIconDist = 151
+  UnitLodDist = 9999
+  Water = 4
+  WindowBorderless = 1
+  WindowPosX = 0
+  WindowPosY = 0
+  XResolutionWindowed = 1920
+  YResolutionWindowed = 1080
+  address = 84.250.119.229
+  snd_volmaster = 48
+============== </User Config> ==============
+============== <User System> ==============
+  Spring 103.0.1-1222-g37dc534 develop
+    Build Environment: boost-105500, GNU libstdc++ version 20130531
+     Compiler Version: gcc-4.8.1
+     Operating System: Microsoft Windows
+Microsoft Home Premium Edition, 64-bit (build 9200)
+Intel(R) Core(TM) i7-3770 CPU @ 3.40GHz; 12236MB RAM, 19916MB pagefile
+     Binary Word Size: 32-bit emulated
+     Deque Chunk Size: 128
+        Process Clock: std::chrono::high_resolution_clock
+   Physical CPU Cores: 4
+    Logical CPU Cores: 8
+============== </User System> ==============
+[good_fpu_init] CPU SSE mask: 127, flags:
+	SSE 1.0:  1,  SSE 2.0:  1
+	SSE 3.0:  1, SSSE 3.0:  1
+	SSE 4.1:  1,  SSE 4.2:  1
+	SSE 4.0A: 0,  SSE 5.0A: 0
+	using streflop SSE FP-math mode, CPU supports SSE instructions
+[WatchDogInstall] Installed (HangTimeout: 5sec)
+[WatchDog::RegisterThread] registering controls for thread [main]
+[GL::CheckAvailableVideoModes] desktop={1920x1080x24bpp@60Hz} current={1920x1080x24bpp@60Hz}
+	display=1 modes=36 bounds={x=0, y=0, w=1920, h=1080}
+		[ 1] 1920x1080x24bpp@60Hz
+		[ 2] 1680x1050x24bpp@60Hz
+		[ 5] 1600x1024x24bpp@60Hz
+		[ 7] 1600x900x24bpp@60Hz
+		[ 9] 1440x900x24bpp@60Hz
+		[15] 1280x800x24bpp@60Hz
+		[17] 1280x720x24bpp@60Hz
+[GR::CreateSDLWindow] using 2x anti-aliasing and 24-bit depth-buffer (PF="SDL_PIXELFORMAT_RGB888")
+[GR::LogVersionInfo]
+	SDL version : 2.0.4 (linked) / 2.0.4 (compiled)
+	GL version  : 4.5.0 NVIDIA 382.05
+	GL vendor   : NVIDIA Corporation
+	GL renderer : GeForce GTX 1060 6GB/PCIe/SSE2
+	GLSL version: 4.50 NVIDIA
+	GLEW version: 1.5.8
+	GPU memory  : 6144MB (total) / 5543MB (available)
+	SwapInterval: 1
+	
+	ARB shader support        : 1
+	GLSL shader support       : 1
+	FBO extension support     : 1
+	NPOT-texture support      : 1 (1)
+	texture query-LOD support : 1 (1)
+	24-bit Z-buffer support   : 1 (-)
+	primitive-restart support : 1 (1)
+	clip-space control support: 0 (0)
+	frag-depth layout support : 1 (-)
+	
+	max. FBO samples             : 32
+	max. texture size            : 32768
+	max. texture anisotropy level: 16.000000
+	max. vec4 varyings/attributes: 31/16
+	max. draw-buffers            : 8
+	max. rec. indices/vertices   : 1048576/1048576
+	max. uniform buffer-bindings : 84
+	max. uniform block-size      : 64KB
+	
+	enable ATI-hacks : 0
+	compress MIP-maps: 0
+[GR::ToggleGLDebugOutput] OpenGL debug-context not installed (dbgErrors=0 dbgTraces=0)
+[GR::LogDisplayMode] display-mode set to 1920x1080x24bpp@60Hz (windowed::borderless)
+Using read-write data directory: C:\Users\tzaeru\Documents\ChobbyWrapper/data\
+Using read-only data directory: C:\Users\tzaeru\Documents\My Games\Spring\
+Using read-only data directory: C:\Users\tzaeru\Documents\Spring\
+Using read-only data directory: C:\Users\tzaeru\Documents\ChobbyWrapper\data\engine\103.0.1-1222-g37dc534 develop\
+Scanning: C:\Users\tzaeru\Documents\ChobbyWrapper\data\engine\103.0.1-1222-g37dc534 develop\base
+Scanning: C:\Users\tzaeru\Documents\My Games\Spring\maps
+Scanning: C:\Users\tzaeru\Documents\My Games\Spring\games
+Scanning: C:\Users\tzaeru\Documents\My Games\Spring\packages
+Scanning: C:\Users\tzaeru\Documents\ChobbyWrapper/data\games
+Scanning: C:\Users\tzaeru\Documents\ChobbyWrapper/data\packages
+Error: Found a "C:\Users\tzaeru\Documents\My Games\Spring\packages\b01f5386a892aa2c86021a3f2fa8d74b.sdp" already in "C:\Users\tzaeru\Documents\ChobbyWrapper\data\packages\b01f5386a892aa2c86021a3f2fa8d74b.sdp", ignoring.
+[~ScopedOnceTimer][CArchiveScanner::ScanAllDirs] 34ms
+[ThreadPool::SetThreadCount][1] wanted=3 current=1 maximum=4
+[ThreadPool::SetThreadCount][2] workers=2
+[Threading] Main thread CPU affinity mask set: 252
+[f=-000001] [Sound] [Sound::InitThread] OpenAL info:
+[f=-000001] [Sound]   Available Devices:
+[f=-000001] [Sound]               Headset Earphone (HyperX 7.1 Audio)
+[f=-000001] [Sound]               Headset Earphone (HyperX 7.1 Audio)
+[f=-000001] [Sound]   Device:     OpenAL Soft
+[f=-000001] [Sound]   Vendor:         OpenAL Community
+[f=-000001] [Sound]   Version:        1.1 ALSOFT 1.16.0
+[f=-000001] [Sound]   Renderer:       OpenAL Soft
+[f=-000001] [Sound]   AL Extensions:  AL_EXT_ALAW AL_EXT_DOUBLE AL_EXT_EXPONENT_DISTANCE AL_EXT_FLOAT32 AL_EXT_IMA4 AL_EXT_LINEAR_DISTANCE AL_EXT_MCFORMATS AL_EXT_MULAW AL_EXT_MULAW_MCFORMATS AL_EXT_OFFSET AL_EXT_source_distance_model AL_LOKI_quadriphonic AL_SOFT_block_alignment AL_SOFT_buffer_samples AL_SOFT_buffer_sub_data AL_SOFT_deferred_updates AL_SOFT_direct_channels AL_SOFT_loop_points AL_SOFT_MSADPCM AL_SOFT_source_latency AL_SOFT_source_length
+[f=-000001] [Sound]   ALC Extensions: ALC_ENUMERATE_ALL_EXT ALC_ENUMERATION_EXT ALC_EXT_CAPTURE ALC_EXT_DEDICATED ALC_EXT_disconnect ALC_EXT_EFX ALC_EXT_thread_local_context ALC_SOFTX_device_clock ALC_SOFTX_HRTF ALC_SOFT_loopback ALC_SOFTX_midi_interface ALC_SOFT_pause_device
+[f=-000001] [Sound]   Max Sounds: 32
+[f=-000001] [Sound] Error:   EFX: AL_INVALID_VALUE (40963)
+[f=-000001] [Sound] Error:   Initializing EFX failed!
+[f=-000001] [Sound] [Sound::UpdateThread][1] maxSounds=32
+[f=-000001] [WatchDog::RegisterThread] registering controls for threa[f=-000001] [Sound] [Sound::UpdateThread][1] maxSounds=32
+[f=-000001] [WatchDog::RegisterThread] registering controls for thread [audio]
+[f=-000001] [Sound] [Sound::UpdateThread][2]
+[f=-000001] Joysticks found: 0
+[f=-000001] [LuaMenuController::Reset] using menu archive "rapid://chobby:test"
+[f=-000001] Error: [ErrorMessageBox] errorMsg="Archive "chobby test-2194-bf5356a" not found" msgCaption="Spring: caught content_error: " mainThread=1
+[f=-000001] [SpringApp::Kill][1] fromRun=0
+[f=-000001] [ThreadPool::SetThreadCount][1] wanted=0 current=3 maximum=4
+[f=-000001] 	[async=0] threads=3 tasks=0 {sum,avg}{exec,wait}time={{0.000, 0.000}, {0.000, 0.000}}ms
+[f=-000001] 	[async=1] threads=3 tasks=2 {sum,avg}{exec,wait}time={{0.000, 0.000}, {0.000, 0.000}}ms
+[f=-000001] 		thread=1 tasks=1 (0.000%) {sum,min,max,avg}{exec,wait}time={{0.000, 0.000, 0.000, 0.000}, {0.000, 0.000, 0.000, 0.000}}ms
+[f=-000001] 		thread=2 tasks=1 (0.000%) {sum,min,max,avg}{exec,wait}time={{0.000, 0.000, 0.000, 0.000}, {0.000, 0.000, 0.000, 0.000}}ms
+[f=-000001] [ThreadPool::SetThreadCount][2] workers=0
+[f=-000001] [SpringApp::Kill][2]
+[f=-000001] [WatchDog::DeregisterThread] deregistering controls for thread [audio]
+[f=-000001] [Sound] [Sound::UpdateThread][3] efx=0404eef0
+[f=-000001] [Sound] [Sound::UpdateThread][4]
+[f=-000001] [SpringApp::Kill][3]
+[f=-et] Dumping luasocket rules:
+[LuaSocket] TCP_CONNECT ALLOW * -1
+[LuaSocket] TCP_LISTEN  ALLOW * -1
+[LuaSocket] UDP_LISTEN  ALLOW * -1
+[SpringApp::Kill][8]
+[WatchDog::DeregisterThread] deregistering controls for thread [main]
+[WatchDog::Uninstall][1] hangDetectorThread=0506bbe8
+[WatchDog::Uninstall][2]
+[WatchDog::Uninstall][3]
+[SpringApp::Kill][9]
+[WatchDog::Uninstall][1] hangDetectorThread=0507bd48
+[WatchDog::Uninstall][2]
+[WatchDog::Uninstall][3]
+[SpringApp::Kill][9]
