@@ -49,15 +49,14 @@ class Downloader(QObject):
         return lineType, data
 
     def _Download(self, args):
-        p = Popen(args,
-            stdout=PIPE,
-            stderr=STDOUT,
-            universal_newlines=True)
+        p = Popen(args, stdout=PIPE, stderr=STDOUT, universal_newlines=True)
         for line in iter(p.stdout.readline, ""):
             lineType, data = self._ProcessLine(line)
             #print(line, lineType, data)
             if lineType == "progress":
-                self.downloadProgress.emit(data[0], data[1])
+                current, total = data[0], data[1]
+                if total > 0:
+                    self.downloadProgress.emit(current, total)
         self.downloadFinished.emit()
 
     def DownloadEngine(self, ver_string):

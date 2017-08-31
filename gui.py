@@ -61,6 +61,37 @@ class GUI(QMainWindow):
         self.dl.downloadFailed.connect(self.OnDownloadFailed)
         self.dl.downloadProgress.connect(self.OnDownloadProgress)
         self.launcher = Launcher()
+        self.actions = ["autoupdate", "game", "engine", "chobby", "extra", "start"]
+
+        self.MaybeNextStep()
+
+    def MaybeNextStep(self):
+        if len(self.actions) == 0:
+            return
+
+        self.action = self.actions[0]
+        self.actions = self.actions[1:]
+        print("Action", self.action)
+
+        if self.action == "autoupdate":
+            print("Implement autoupdate")
+            self.MaybeNextStep()
+        elif self.action == "game":
+            thread = Thread(target = self.dl.DownloadGame)
+            thread.start()
+        elif self.action == "engine":
+            thread = Thread(target = self.dl.DownloadEngine, args = (self.launcher.GetGameEngineVersion(),))
+            thread.start()
+        elif self.action == "chobby":
+            thread = Thread(target = self.dl.DownloadChobby)
+            thread.start()
+        elif self.action == "extra":
+            print("Implement downloading other stuff (maps/games)")
+            self.MaybeNextStep()
+        elif self.action == "start":
+            thread = Thread(target = self.launcher.StartChobby, args = (self.launcher.GetGameEngineVersion(),))
+            thread.start()
+            self.MaybeNextStep()
 
     @pyqtSlot(str, str)
     def OnDownloadStarted(self, name, type):
@@ -71,6 +102,7 @@ class GUI(QMainWindow):
     def OnDownloadFinished(self):
         self.status.setText("Finished.")
         self.status.adjustSize()
+        self.MaybeNextStep()
 
     @pyqtSlot()
     def OnDownloadFailed(self):
@@ -82,5 +114,4 @@ class GUI(QMainWindow):
         self.pbDownload.setValue(current / total * 100)
 
     def OnBtnClick(self):
-        thread = Thread(target = self.dl.DownloadEngine, args = (self.launcher.GetGameEngineVersion(), ))
-        thread.start()
+        self.MaybeNextStep()
