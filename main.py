@@ -17,17 +17,7 @@ import sys
 from PyQt5.QtWidgets import QWidget, QPushButton, QApplication
 from PyQt5.QtCore import QCoreApplication
 import json
-from subprocess import call, Popen
-import os
-from unitsync import unitsync
 from gui import GUI
-import wrapper
-
-#DownloadGame()
-#DownloadEngine(GetGameEngineVersion())
-#DownloadChobby()
-#DownloadGame()
-#StartChobby(GetGameEngineVersion())
 
 if __name__ == '__main__':
 
