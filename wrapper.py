@@ -38,16 +38,16 @@ class Downloader(object):
     def DownloadEngine(self, ver_string):
         self.status = Status.CHECKING_ENGINE
         p = Popen([self.PR_DOWNLOADER_PATH, '--download-engine', ver_string, '--filesystem-writepath', 'data/'],
-        stdout=PIPE,
-        stderr=STDOUT)
+            stdout=PIPE,
+            stderr=STDOUT)
 
-    for line in iter(p.stdout.readline, b''):
+        for line in iter(p.stdout.readline, b''):
             print(">>> " + line.rstrip().decode('utf-8'))
 
-    status = Status.FINISHED_DOWNLOAD
+        status = Status.FINISHED_DOWNLOAD
 
-    #DownloadGame()
-    #DownloadChobby()
+        #DownloadGame()
+        #DownloadChobby()
         self.StartChobby(self.GetGameEngineVersion())
 
     def DownloadGame(self):
@@ -55,35 +55,35 @@ class Downloader(object):
 
     def DownloadChobby(self):
         p = Popen([self.PR_DOWNLOADER_PATH, 'chobby:test', '--filesystem-writepath', 'data/'],
-        stdout=PIPE,
-        stderr=STDOUT)
+            stdout=PIPE,
+            stderr=STDOUT)
 
-    for line in iter(p.stdout.readline, b''):
-        print(">>> " + line.rstrip().decode('utf-8'))
+        for line in iter(p.stdout.readline, b''):
+            print(">>> " + line.rstrip().decode('utf-8'))
 
     def StartChobby(self, ver_string):
         Popen(["data/engine/" + ver_string + "/" + self.SPRING_BIN,
-        "--write-dir",
-        os.getcwd() + "/data",
-        "--menu",
-        "rapid://chobby:test"])
+            "--write-dir",
+            os.getcwd() + "/data",
+            "--menu",
+            "rapid://chobby:test"])
 
     def GetGameEngineVersion(self):
-    return "103.0.1-1222-g37dc534 develop"
-    #TODO: Fix this abomination!
-    _sync = unitsync.Unitsync("C:/Users/tzaeru/Documents/ChobbyWrapper/data/engine/103.0.1-1222-g37dc534 develop/unitsync.dll")
-    print(_sync.GetSpringVersion())
-    #print(_sync.SetSpringConfigString("write-dir", os.getcwd() + "/data")))
-    #print(_sync.SetSpringConfigString("SpringData", os.getcwd() + "/data"))
-    _sync.Init(True, 1)
-    print(_sync.SetSpringConfigFile("C:/Users/tzaeru/Documents/ChobbyWrapper/data/engine/103.0.1-1222-g37dc534 develop/springsettins.cfg"))
+        return "103.0.1-1222-g37dc534 develop"
+        #TODO: Fix this abomination!
+        _sync = unitsync.Unitsync("C:/Users/tzaeru/Documents/ChobbyWrapper/data/engine/103.0.1-1222-g37dc534 develop/unitsync.dll")
+        print(_sync.GetSpringVersion())
+        #print(_sync.SetSpringConfigString("write-dir", os.getcwd() + "/data")))
+        #print(_sync.SetSpringConfigString("SpringData", os.getcwd() + "/data"))
+        _sync.Init(True, 1)
+        print(_sync.SetSpringConfigFile("C:/Users/tzaeru/Documents/ChobbyWrapper/data/engine/103.0.1-1222-g37dc534 develop/springsettins.cfg"))
 
-    print("COUNT:" + str(_sync.GetDataDirectoryCount()))
-    print("IT IS: " + str(_sync.GetDataDirectory(1)))
-    print("MODS: " + str(_sync.GetPrimaryModCount()))
-    #print("Count: " + str(_sync.GetPrimaryModCount()))
-    #print(_sync.AddAllArchives("Chobby"))
-    #print(_sync.GetPrimaryModCount())
+        print("COUNT:" + str(_sync.GetDataDirectoryCount()))
+        print("IT IS: " + str(_sync.GetDataDirectory(1)))
+        print("MODS: " + str(_sync.GetPrimaryModCount()))
+        #print("Count: " + str(_sync.GetPrimaryModCount()))
+        #print(_sync.AddAllArchives("Chobby"))
+        #print(_sync.GetPrimaryModCount())
 
 def test():
     dl = Downloader()
@@ -98,4 +98,4 @@ def test():
 #[Error] ../../tools/pr-downloader/src/FileSystem/FileSystem.cpp:601:extract(): File already exists: data/\engine\103.0.1-1222-g37dc534 develop\AI\Interfaces\Java\0.1\AIInterface.dll
 #[Info] extracting (data/\engine\103.0.1-1222-g37dc534 develop\springsettings.cfg)
 #[Progress] 100% [==============================] 11747350/11747350 0
-#[Progress]  14% [====                          ] 14471581/103362781 
+#[Progress]  14% [====                          ] 14471581/103362781

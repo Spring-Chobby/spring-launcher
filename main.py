@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 """
-ZetCode PyQt5 tutorial 
+ZetCode PyQt5 tutorial
 
 This program creates a quit
 button. When we press the button,
-the application terminates. 
+the application terminates.
 
 author: Jan Bodnar
-website: zetcode.com 
+website: zetcode.com
 last edited: January 2015
 """
 
@@ -27,10 +27,10 @@ import wrapper
 #DownloadEngine(GetGameEngineVersion())
 #DownloadChobby()
 #DownloadGame()
-#StartChobby(GetGameEngineVersion())     
-        
+#StartChobby(GetGameEngineVersion())
+
 if __name__ == '__main__':
-    
+
     json_data = None
 
     with open('config.json') as data_file:

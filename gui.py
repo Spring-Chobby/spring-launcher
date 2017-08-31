@@ -4,17 +4,17 @@ from PyQt5.QtGui import QFont, QColor, QFontDatabase
 import json
 from threading import Thread
 
-import wrapper
+from wrapper import Downloader
 
 class GUI(QMainWindow):
-    
+
     def __init__(self):
         super().__init__()
-        
+
         self.initUI()
 
-    def initUI(self):               
-        
+    def initUI(self):
+
         font_id = QFontDatabase.addApplicationFont('C:/Users/tzaeru/Documents/ChobbyWrapper/font/Audiowide-Regular.ttf')
         print(font_id)
         families = QFontDatabase.applicationFontFamilies(font_id)
@@ -45,18 +45,20 @@ class GUI(QMainWindow):
         self.timer = QTimer()
         self.timer.timeout.connect(self.CheckStatusUpdates)
         self.timer.start(1)  # 10 times a second
-        
+
         self.setGeometry(300, 300, 250, 150)
         self.setStyleSheet("QMainWindow {border-image: url(data/background.jpg) 0 0 0 0 stretch stretch;}")
         self.setObjectName("Window")
         self.setWindowTitle('Quit button')
         self.show()
 
+        self.dl = Downloader()
+
     def OnDownloadEngine(self):
-        thread = Thread(target = wrapper.DownloadEngine, args = (wrapper.GetGameEngineVersion(), ))
+        thread = Thread(target = self.dl.DownloadEngine, args = (self.dl.GetGameEngineVersion(), ))
         thread.start()
 
     def CheckStatusUpdates(self):
         self.status.setText("dsa")
-        self.status.setText(str(wrapper.status))
+        self.status.setText(str(self.dl.status))
         self.status.adjustSize()
