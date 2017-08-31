@@ -2,6 +2,7 @@ from subprocess import call, Popen, PIPE, STDOUT
 import sys
 import json
 import os
+import platform
 from enum import Enum
 
 class Status(Enum):
@@ -15,45 +16,59 @@ class Status(Enum):
     LAUNCHING_CHOBBY = 7
     CHOBBY_RUNNING = 8
     FINISHED_DOWNLOAD = 9
-status = Status.CHECKING_ENGINE
-status_info = ""
 
-def DownloadEngine(ver_string):
-    global status
-    status = Status.CHECKING_ENGINE
-    p = Popen(['pr-downloader', '--download-engine', ver_string, '--filesystem-writepath', 'data/'],
+class Downloader(object):
+    def __init__(self):
+        platformName = platform.system()
+        if platformName == "Windows":
+            self.PR_DOWNLOADER_PATH = "./bin/pr-downloader.exe"
+            self.SPRING_BIN = "spring.exe"
+        elif platformName == "Linux":
+            self.PR_DOWNLOADER_PATH = "./bin/pr-downloader"
+            self.SPRING_BIN = "spring"
+        else:
+            # FIXME: this should be printed in the GUI!
+            print("Unsupported platform: {}".format(platformName))
+            sys.exit(-1)
+        print("Detected platform: {}".format(platformName))
+
+        self.status = Status.CHECKING_ENGINE
+        self.status_info = ""
+
+    def DownloadEngine(self, ver_string):
+        self.status = Status.CHECKING_ENGINE
+        p = Popen([self.PR_DOWNLOADER_PATH, '--download-engine', ver_string, '--filesystem-writepath', 'data/'],
         stdout=PIPE,
         stderr=STDOUT)
 
     for line in iter(p.stdout.readline, b''):
-        pass
-        #print(">>> " + line.rstrip().decode('utf-8'))
+            print(">>> " + line.rstrip().decode('utf-8'))
 
     status = Status.FINISHED_DOWNLOAD
 
     #DownloadGame()
     #DownloadChobby()
-    StartChobby(GetGameEngineVersion())
+        self.StartChobby(self.GetGameEngineVersion())
 
-def DownloadGame():
-    Popen(['pr-downloader', 'ba:test', '--filesystem-writepath', 'data/'])
+    def DownloadGame(self):
+        Popen([self.PR_DOWNLOADER_PATH, 'ba:test', '--filesystem-writepath', 'data/'])
 
-def DownloadChobby():
-    p = Popen(['pr-downloader', 'chobby:test', '--filesystem-writepath', 'data/'],
+    def DownloadChobby(self):
+        p = Popen([self.PR_DOWNLOADER_PATH, 'chobby:test', '--filesystem-writepath', 'data/'],
         stdout=PIPE,
         stderr=STDOUT)
 
     for line in iter(p.stdout.readline, b''):
         print(">>> " + line.rstrip().decode('utf-8'))
 
-def StartChobby(ver_string):
-    Popen(["data/engine/" + ver_string + "/spring.exe",
+    def StartChobby(self, ver_string):
+        Popen(["data/engine/" + ver_string + "/" + self.SPRING_BIN,
         "--write-dir",
         os.getcwd() + "/data",
         "--menu",
         "rapid://chobby:test"])
 
-def GetGameEngineVersion():
+    def GetGameEngineVersion(self):
     return "103.0.1-1222-g37dc534 develop"
     #TODO: Fix this abomination!
     _sync = unitsync.Unitsync("C:/Users/tzaeru/Documents/ChobbyWrapper/data/engine/103.0.1-1222-g37dc534 develop/unitsync.dll")
@@ -70,11 +85,14 @@ def GetGameEngineVersion():
     #print(_sync.AddAllArchives("Chobby"))
     #print(_sync.GetPrimaryModCount())
 
+def test():
+    dl = Downloader()
+    dl.DownloadGame()
+    dl.DownloadEngine(dl.GetGameEngineVersion())
+    dl.DownloadChobby()
+    dl.StartChobby()
 
-#DownloadGame()
-#DownloadEngine(GetGameEngineVersion())
-#DownloadChobby()
-#StartChobby()
+#test()
 
 #[Info] Download complete!
 #[Error] ../../tools/pr-downloader/src/FileSystem/FileSystem.cpp:601:extract(): File already exists: data/\engine\103.0.1-1222-g37dc534 develop\AI\Interfaces\Java\0.1\AIInterface.dll
