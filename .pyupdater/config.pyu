@@ -1,0 +1,20 @@
+{
+  "sync_threshold": 3,
+  "filename": "/mnt/fast/radni_direktorijum/programi/Launcher/.pyupdater/config.pyu",
+  "config_dir": "/mnt/fast/radni_direktorijum/programi/Launcher/.pyupdater",
+  "count": 0,
+  "app_config": {
+    "COMPANY_NAME": "Spring-Chobby",
+    "PLUGIN_CONFIGS": {},
+    "UPDATE_URLS": [
+      ""
+    ],
+    "MAX_DOWNLOAD_RETRIES": 3,
+    "APP_NAME": "Chobby Launcher",
+    "DATA_DIR": "/mnt/fast/radni_direktorijum/programi/Launcher",
+    "UPDATE_PATCHES": true,
+    "CLIENT_CONFIG_PATH": [
+      "client_config.py"
+    ]
+  }
+}
