@@ -1,33 +1,17 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-"""
-ZetCode PyQt5 tutorial
-
-This program creates a quit
-button. When we press the button,
-the application terminates.
-
-author: Jan Bodnar
-website: zetcode.com
-last edited: January 2015
-"""
-
 import sys
-from PyQt5.QtWidgets import QWidget, QPushButton, QApplication
-from PyQt5.QtCore import QCoreApplication
-import json
-from gui import GUI
+import logging
+
+from PyQt5.QtWidgets import QApplication
 
 if __name__ == '__main__':
 
-    json_data = None
+    logging.basicConfig(filename='chobby.log', level=logging.INFO, filemode='w')
+    logging.info("Started logging...")
 
-    with open('config.json') as data_file:
-    	json_data = json.load(data_file)
-
-    print(json_data["game_name"])
-
+    from gui import GUI
     app = QApplication(sys.argv)
     ex = GUI()
     sys.exit(app.exec_())

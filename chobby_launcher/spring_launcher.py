@@ -1,15 +1,21 @@
 from subprocess import Popen
 import os
 
+from PyQt5.QtCore import QObject, pyqtSignal
+
 from spring_platform import Platform
 
-class Launcher(object):
+class Launcher(QObject):
+    lobbyClosed = pyqtSignal(name='lobbyClosed')
+
     def StartChobby(self, ver_string):
-        Popen(["data/engine/" + ver_string + "/" + Platform.SPRING_BIN,
+        p = Popen(["./data/engine/" + ver_string + "/" + Platform.SPRING_BIN,
             "--write-dir",
             os.getcwd() + "/data",
             "--menu",
             "rapid://chobby:test"])
+        p.wait()
+        self.lobbyClosed.emit()
 
     def GetGameEngineVersion(self):
         return "103.0.1-1222-g37dc534 develop"
@@ -30,4 +36,7 @@ class Launcher(object):
 
 def test():
     launcher = Launcher()
-    launcher.StartChobby() # ver_string ?
+    launcher.StartChobby(launcher.GetGameEngineVersion())
+
+if __name__ == "__main__":
+    test()

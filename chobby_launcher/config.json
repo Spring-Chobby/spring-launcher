@@ -1,0 +1,16 @@
+{
+    "server" : {
+            "address" : "springrts.com",
+            "port" : 8200,
+            "serverName" : "Spring",
+            "protocol" : "spring"
+    },
+    "game" : "ba",
+
+	"auto_download" : false,
+	"auto_start" : false,
+
+	"game_title": "Balanced Annihilation",
+	"game_rapid": "ba:test",
+	"lobby_rapid": "chobby:test"
+}

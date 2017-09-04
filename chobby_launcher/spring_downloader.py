@@ -1,7 +1,9 @@
-from PyQt5.QtCore import QObject, pyqtSignal
-
 import re
 from subprocess import Popen, PIPE, STDOUT
+import os
+import logging
+
+from PyQt5.QtCore import QObject, pyqtSignal
 
 from spring_platform import Platform
 
@@ -10,6 +12,7 @@ class Downloader(QObject):
     downloadFinished = pyqtSignal(name='downloadFinished')
     downloadFailed = pyqtSignal(name='downloadFailed')
     downloadProgress = pyqtSignal(int, int, name='downloadProgress')
+    FOLDER = "data"
 
     def __init__(self):
         super(QObject, self).__init__()
@@ -51,25 +54,27 @@ class Downloader(QObject):
     def _Download(self, args):
         p = Popen(args, stdout=PIPE, stderr=STDOUT, universal_newlines=True)
         for line in iter(p.stdout.readline, ""):
+            logging.info(line[:-1])
             lineType, data = self._ProcessLine(line)
-            #print(line, lineType, data)
             if lineType == "progress":
                 current, total = data[0], data[1]
                 if total > 0:
                     self.downloadProgress.emit(current, total)
         self.downloadFinished.emit()
 
+    def _MaybeMakeFolder(self):
+        if not os.path.exists(self.FOLDER):
+            os.makedirs(self.FOLDER)
+
     def DownloadEngine(self, ver_string):
+        self._MaybeMakeFolder()
         self.downloadStarted.emit(ver_string, "Engine")
-        self._Download([Platform.PR_DOWNLOADER_PATH, '--download-engine', ver_string, '--filesystem-writepath', 'data/'])
+        self._Download([Platform.PR_DOWNLOADER_PATH, '--download-engine', ver_string, '--filesystem-writepath', self.FOLDER])
 
-    def DownloadGame(self):
-        self.downloadStarted.emit('ba:test', "Game")
-        self._Download([Platform.PR_DOWNLOADER_PATH, 'ba:test', '--filesystem-writepath', 'data/'])
-
-    def DownloadChobby(self):
-        self.downloadStarted.emit('chobby:test', "Game")
-        self._Download([Platform.PR_DOWNLOADER_PATH, 'chobby:test', '--filesystem-writepath', 'data/'])
+    def DownloadGame(self, name):
+        self._MaybeMakeFolder()
+        self.downloadStarted.emit(name, "Game")
+        self._Download([Platform.PR_DOWNLOADER_PATH, name, '--filesystem-writepath', self.FOLDER])
 
 def test():
     dl = Downloader()
@@ -77,4 +82,5 @@ def test():
     dl.DownloadEngine(dl.GetGameEngineVersion())
     dl.DownloadChobby()
 
-#test()
+if __name__ == "__main__":
+    test()
