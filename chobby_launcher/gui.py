@@ -3,6 +3,7 @@ from threading import Thread
 import os
 import logging
 import sys
+import shutil
 
 from PyQt5.QtWidgets import QWidget, QPushButton, QApplication, QLabel, QMainWindow, QSizePolicy, QGraphicsDropShadowEffect, QProgressBar
 from PyQt5.QtCore import QCoreApplication, QTimer, pyqtSlot
@@ -116,6 +117,8 @@ class GUI(QMainWindow):
             else:
                 self.MaybeNextStep()
         elif self.currentAction == "start":
+            if not os.path.exists(os.path.join(self.dl.FOLDER, "chobby_config.json")):
+                shutil.copy("config.json", os.path.join(self.dl.FOLDER, "chobby_config.json"))
             thread = Thread(target = self.launcher.StartChobby, args = (self.launcher.GetGameEngineVersion(),))
             thread.start()
             self.hide()

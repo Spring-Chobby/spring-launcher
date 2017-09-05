@@ -5,10 +5,10 @@
             "serverName" : "Spring",
             "protocol" : "spring"
     },
-    "game" : "ba",
+    "game" : "generic",
 
-	"auto_download" : false,
-	"auto_start" : false,
+	"auto_download" : true,
+	"auto_start" : true,
 
 	"game_title": "Balanced Annihilation",
 	"game_rapid": "ba:test",
