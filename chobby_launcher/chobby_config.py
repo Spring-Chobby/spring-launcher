@@ -1,10 +1,11 @@
 import json
+import pkgutil
 
 class ChobbyConfig(object):
     def __init__(self):
-        json_data = None
-        with open('config.json') as data_file:
-        	json_data = json.load(data_file)
+        configFile = pkgutil.get_data("chobby_launcher", "config.json")
+        configFile = configFile.decode('utf-8')
+        json_data = json.loads(configFile)
 
         self.auto_download = json_data["auto_download"]
         self.auto_start = json_data["auto_start"]
