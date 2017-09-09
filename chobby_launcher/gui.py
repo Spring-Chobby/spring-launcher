@@ -21,7 +21,7 @@ class GUI(QMainWindow):
         self.config = ChobbyConfig()
         self.initUI()
 
-    def closeEvent(self):
+    def closeEvent(self, _):
         sys.exit(0)
 
     def initUI(self):
@@ -73,7 +73,7 @@ class GUI(QMainWindow):
         self.maps = copy.deepcopy(self.config.maps)
         self.engines = copy.deepcopy(self.config.engines)
 
-        self.actions = ["autoupdate", "game", "engine", "lobby", "extra", "start"]
+        self.actions = ["autoupdate", "packages", "start"]
         if self.config.no_downloads:
             self.actions = ["start"]
         self.DisplayNextAction()
@@ -86,7 +86,7 @@ class GUI(QMainWindow):
             return
 
         nextAction = self.actions[0]
-        if nextAction in ["game", "engine", "lobby", "extra"]:
+        if nextAction == "packages":
             self.btnAction.setText("Download")
             self.btnAction.resize(self.btnAction.sizeHint())
         elif nextAction == "autoupdate":
@@ -109,33 +109,24 @@ class GUI(QMainWindow):
         if self.currentAction == "autoupdate":
             logging.warning("Implement autoupdate")
             self.MaybeNextStep()
-        elif self.currentAction == "game":
-            thread = Thread(target = self.dl.DownloadGame, args = (self.config.game_rapid,))
-            thread.start()
-        elif self.currentAction == "engine":
-            thread = Thread(target = self.dl.DownloadEngine, args = (self.launcher.GetGameEngineVersion(),))
-            thread.start()
-        elif self.currentAction == "lobby":
-            thread = Thread(target = self.dl.DownloadGame, args = (self.config.lobby_rapid,))
-            thread.start()
-        elif self.currentAction == "extra":
+        elif self.currentAction == "packages":
             if len(self.games) != 0:
-                self.actions = ["extra"] + self.actions[1:]
+                self.actions = ["packages"] + self.actions
                 game = self.games[0]
                 self.games = self.games[1:]
                 thread = Thread(target = self.dl.DownloadGame, args = (game,))
                 thread.start()
             elif len(self.maps) != 0:
-                self.actions = ["extra"] + self.actions[1:]
+                self.actions = ["packages"] + self.actions
                 _map = self.maps[0]
                 self.maps = self.maps[1:]
                 thread = Thread(target = self.dl.DownloadMap, args = (_map,))
                 thread.start()
             elif len(self.engines) != 0:
-                self.actions = ["extra"] + self.actions[1:]
+                self.actions = ["packages"] + self.actions
                 engine = self.engines[0]
                 self.engines = self.engines[1:]
-                thread = Thread(target = self.dl.DownloadEngine, args = (game,))
+                thread = Thread(target = self.dl.DownloadEngine, args = (engine,))
                 thread.start()
             else:
                 if len(self.actions) > 0 and self.actions[0] == "start" and not self.config.auto_start:
@@ -150,9 +141,6 @@ class GUI(QMainWindow):
             extraArgs = None
             if self.config.start_args:
                 extraArgs = self.config.start_args
-            elif self.config.lobby_rapid:
-                extraArgs = ["--menu",
-                             "rapid://{}".format(self.config.lobby_rapid)]
             thread = Thread(target = self.launcher.StartChobby, args = (self.launcher.GetGameEngineVersion(), extraArgs))
             thread.start()
             self.hide()

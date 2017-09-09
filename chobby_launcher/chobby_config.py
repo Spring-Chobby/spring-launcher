@@ -16,9 +16,6 @@ class ChobbyConfig(object):
 
         self.game_title = json_data["game_title"]
 
-        self.game_rapid = json_data["game_rapid"]
-        self.lobby_rapid = json_data["lobby_rapid"]
-
         self.games = json_data.get("games", [])
         self.maps = json_data.get("maps", [])
         self.engines = json_data.get("engines", [])
