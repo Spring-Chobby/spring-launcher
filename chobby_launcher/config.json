@@ -9,6 +9,7 @@
 
 	"auto_download" : true,
 	"auto_start" : true,
+    "no_downloads" : false,
 
 	"game_title": "Balanced Annihilation",
 	"game_rapid": "ba:test",

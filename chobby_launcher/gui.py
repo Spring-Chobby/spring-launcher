@@ -66,6 +66,8 @@ class GUI(QMainWindow):
         self.launcher.lobbyClosed.connect(self.OnLobbyClosed)
 
         self.actions = ["autoupdate", "game", "engine", "lobby", "extra", "start"]
+        if self.config.no_downloads:
+            self.actions = ["start"]
         self.DisplayNextAction()
         if self.config.auto_download:
             self.btnAction.setEnabled(False)

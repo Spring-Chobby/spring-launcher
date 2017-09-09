@@ -9,6 +9,8 @@ class ChobbyConfig(object):
 
         self.auto_download = json_data["auto_download"]
         self.auto_start = json_data["auto_start"]
+        self.no_downloads = json_data["no_downloads"]
+
         self.game_title = json_data["game_title"]
 
         self.game_rapid = json_data["game_rapid"]
