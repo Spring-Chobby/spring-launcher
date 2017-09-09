@@ -19,3 +19,5 @@ class ChobbyConfig(object):
         self.games = json_data.get("games", [])
         self.maps = json_data.get("maps", [])
         self.engines = json_data.get("engines", [])
+
+        self.start_args = json_data.get("start_args")

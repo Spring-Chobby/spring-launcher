@@ -8,12 +8,13 @@ from spring_platform import Platform
 class Launcher(QObject):
     lobbyClosed = pyqtSignal(name='lobbyClosed')
 
-    def StartChobby(self, ver_string):
-        p = Popen(["./data/engine/" + ver_string + "/" + Platform.SPRING_BIN,
+    def StartChobby(self, ver_string, extraArgs=None):
+        args = ["./data/engine/" + ver_string + "/" + Platform.SPRING_BIN,
             "--write-dir",
-            os.getcwd() + "/data",
-            "--menu",
-            "rapid://chobby:test"])
+            os.getcwd() + "/data"]
+        if extraArgs is not None:
+             args = args + extraArgs
+        p = Popen(args)
         p.wait()
         self.lobbyClosed.emit()
 

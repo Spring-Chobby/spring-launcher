@@ -144,7 +144,13 @@ class GUI(QMainWindow):
         elif self.currentAction == "start":
             if not os.path.exists(os.path.join(self.dl.FOLDER, "chobby_config.json")):
                 shutil.copy("config.json", os.path.join(self.dl.FOLDER, "chobby_config.json"))
-            thread = Thread(target = self.launcher.StartChobby, args = (self.launcher.GetGameEngineVersion(),))
+            extraArgs = None
+            if self.config.start_args:
+                extraArgs = self.config.start_args
+            elif self.config.lobby_rapid:
+                extraArgs = ["--menu",
+                             "rapid://{}".format(self.config.lobby_rapid)]
+            thread = Thread(target = self.launcher.StartChobby, args = (self.launcher.GetGameEngineVersion(), extraArgs))
             thread.start()
             self.hide()
             # NOTE: This **might** be needed for Windows; test!
