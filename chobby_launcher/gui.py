@@ -71,7 +71,6 @@ class GUI(QMainWindow):
         self.engines = copy.deepcopy(self.config.engines)
 
         self.actions = ["autoupdate", "game", "engine", "lobby", "extra", "start"]
-        self.actions = ["extra"]
         if self.config.no_downloads:
             self.actions = ["start"]
         self.DisplayNextAction()
