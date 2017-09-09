@@ -4,6 +4,7 @@ import os
 import logging
 import sys
 import shutil
+import copy
 
 from PyQt5.QtWidgets import QWidget, QPushButton, QApplication, QLabel, QMainWindow, QSizePolicy, QGraphicsDropShadowEffect, QProgressBar
 from PyQt5.QtCore import QCoreApplication, QTimer, pyqtSlot
@@ -65,7 +66,12 @@ class GUI(QMainWindow):
         self.launcher = Launcher()
         self.launcher.lobbyClosed.connect(self.OnLobbyClosed)
 
+        self.games = copy.deepcopy(self.config.games)
+        self.maps = copy.deepcopy(self.config.maps)
+        self.engines = copy.deepcopy(self.config.engines)
+
         self.actions = ["autoupdate", "game", "engine", "lobby", "extra", "start"]
+        self.actions = ["extra"]
         if self.config.no_downloads:
             self.actions = ["start"]
         self.DisplayNextAction()
@@ -111,13 +117,31 @@ class GUI(QMainWindow):
             thread = Thread(target = self.dl.DownloadGame, args = (self.config.lobby_rapid,))
             thread.start()
         elif self.currentAction == "extra":
-            logging.warning("Implement downloading other stuff (maps/games)")
-            if self.actions[0] == "start" and not self.config.auto_start:
-                self.currentAction = None
-                self.btnAction.setEnabled(True)
-                self.DisplayNextAction()
+            if len(self.games) != 0:
+                self.actions = ["extra"] + self.actions[1:]
+                game = self.games[0]
+                self.games = self.games[1:]
+                thread = Thread(target = self.dl.DownloadGame, args = (game,))
+                thread.start()
+            elif len(self.maps) != 0:
+                self.actions = ["extra"] + self.actions[1:]
+                _map = self.maps[0]
+                self.maps = self.maps[1:]
+                thread = Thread(target = self.dl.DownloadMap, args = (_map,))
+                thread.start()
+            elif len(self.engines) != 0:
+                self.actions = ["extra"] + self.actions[1:]
+                engine = self.engines[0]
+                self.engines = self.engines[1:]
+                thread = Thread(target = self.dl.DownloadEngine, args = (game,))
+                thread.start()
             else:
-                self.MaybeNextStep()
+                if len(self.actions) > 0 and self.actions[0] == "start" and not self.config.auto_start:
+                    self.currentAction = None
+                    self.btnAction.setEnabled(True)
+                    self.DisplayNextAction()
+                else:
+                    self.MaybeNextStep()
         elif self.currentAction == "start":
             if not os.path.exists(os.path.join(self.dl.FOLDER, "chobby_config.json")):
                 shutil.copy("config.json", os.path.join(self.dl.FOLDER, "chobby_config.json"))

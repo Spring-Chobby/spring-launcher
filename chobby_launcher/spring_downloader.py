@@ -85,6 +85,11 @@ class Downloader(QObject):
         self.downloadStarted.emit(name, "Game")
         self._Download([Platform.PR_DOWNLOADER_PATH, '--download-game', name, '--filesystem-writepath', self.FOLDER])
 
+    def DownloadMap(self, name):
+        self._MaybeMakeFolder()
+        self.downloadStarted.emit(name, "Map")
+        self._Download([Platform.PR_DOWNLOADER_PATH, '--download-map', name, '--filesystem-writepath', self.FOLDER])
+
 def test():
     dl = Downloader()
     dl.DownloadGame()
