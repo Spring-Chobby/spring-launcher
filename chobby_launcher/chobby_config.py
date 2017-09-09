@@ -4,7 +4,10 @@ import pkgutil
 class ChobbyConfig(object):
     def __init__(self):
         configFile = pkgutil.get_data("chobby_launcher", "config.json")
-        configFile = configFile.decode('utf-8')
+        if configFile:
+            configFile = configFile.decode('utf-8')
+        else:
+            configFile = open("config.json", "r").read()
         json_data = json.loads(configFile)
 
         self.auto_download = json_data["auto_download"]
