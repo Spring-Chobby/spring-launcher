@@ -21,6 +21,9 @@ class GUI(QMainWindow):
         self.config = ChobbyConfig()
         self.initUI()
 
+    def closeEvent(self):
+        sys.exit(0)
+
     def initUI(self):
         fontPath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'font/Audiowide-Regular.ttf')
         font_id = QFontDatabase.addApplicationFont(fontPath)
