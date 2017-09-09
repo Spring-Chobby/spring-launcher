@@ -10,7 +10,7 @@ from spring_platform import Platform
 class Downloader(QObject):
     downloadStarted = pyqtSignal(str, str, name='downloadStarted')
     downloadFinished = pyqtSignal(name='downloadFinished')
-    downloadFailed = pyqtSignal(name='downloadFailed')
+    downloadFailed = pyqtSignal(str, name='downloadFailed')
     downloadProgress = pyqtSignal(int, int, name='downloadProgress')
     FOLDER = "data"
 
@@ -21,10 +21,11 @@ class Downloader(QObject):
 
     def _InitializePatterns(self):
         self.progressPattern = re.compile("[0-9]+/[0-9]+")
+        self.missingPattern = re.compile(".*no engine.*|.*no mirrors.*|.*no game found.*|.*no map found.*|.*error occured while downloading.*")
 
     # takes line from pr-downloader
     # returns lineType, data
-    # lineType is one of "info", "progress", "extract", "done"
+    # lineType is one of "info", "progress", "failed", "extract", "done"
     # data depends on lineType;
     # info-> data is a string
     # progress-> data is a tuple of (current, max)
@@ -42,6 +43,10 @@ class Downloader(QObject):
             current = int(current)
             total = int(total)
             data = (current, total)
+        elif line.startswith("[Error]"):
+            if self.missingPattern.match(line.lower()):
+                lineType = "failed"
+                data = "Problem downloading: {}".format(line)
         elif line.startswith("[Info]"):
             if line == "[Info] Download complete!":
                 lineType = "info"
@@ -60,6 +65,10 @@ class Downloader(QObject):
                 current, total = data[0], data[1]
                 if total > 0:
                     self.downloadProgress.emit(current, total)
+            elif lineType == "failed":
+                self.downloadFailed.emit(data)
+                p.wait()
+                return
         self.downloadFinished.emit()
 
     def _MaybeMakeFolder(self):
@@ -74,7 +83,7 @@ class Downloader(QObject):
     def DownloadGame(self, name):
         self._MaybeMakeFolder()
         self.downloadStarted.emit(name, "Game")
-        self._Download([Platform.PR_DOWNLOADER_PATH, name, '--filesystem-writepath', self.FOLDER])
+        self._Download([Platform.PR_DOWNLOADER_PATH, '--download-game', name, '--filesystem-writepath', self.FOLDER])
 
 def test():
     dl = Downloader()

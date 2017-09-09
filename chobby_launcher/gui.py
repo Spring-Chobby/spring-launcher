@@ -139,9 +139,9 @@ class GUI(QMainWindow):
         self.lblStatus.adjustSize()
         self.MaybeNextStep()
 
-    @pyqtSlot()
-    def OnDownloadFailed(self):
-        self.lblStatus.setText("Failed to download: " + name)
+    @pyqtSlot(str)
+    def OnDownloadFailed(self, msg):
+        self.lblStatus.setText(msg)
         self.lblStatus.adjustSize()
 
     @pyqtSlot(int, int)
