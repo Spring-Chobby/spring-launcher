@@ -9,7 +9,6 @@ from PyQt5.QtWidgets import QApplication
 if __name__ == '__main__':
 
     logging.basicConfig(filename='chobby.log', level=logging.INFO, filemode='w')
-    print("KMEE")
     logging.info("Started logging...")
 
     from gui import GUI
