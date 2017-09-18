@@ -73,6 +73,9 @@ class GUI(QMainWindow):
         self.maps = copy.deepcopy(self.config.maps)
         self.engines = copy.deepcopy(self.config.engines)
 
+        if self.engines and len(self.engines) > 0:
+            self.launcher.VERSION_STRING = self.engines[0]
+
         self.actions = ["autoupdate", "packages", "start"]
         if self.config.no_downloads:
             self.actions = ["start"]
@@ -136,8 +139,11 @@ class GUI(QMainWindow):
                 else:
                     self.MaybeNextStep()
         elif self.currentAction == "start":
-            if not os.path.exists(os.path.join(self.dl.FOLDER, "chobby_config.json")):
-                shutil.copy("config.json", os.path.join(self.dl.FOLDER, "chobby_config.json"))
+            required_files = ["config.json", "springsettings.cfg"]
+            for f in required_files:
+                if not os.path.exists(os.path.join(self.dl.FOLDER, f)):
+                    shutil.copy(f, os.path.join(self.dl.FOLDER, f))
+
             extraArgs = None
             if self.config.start_args:
                 extraArgs = self.config.start_args
