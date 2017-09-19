@@ -8,7 +8,7 @@
     "game" : "generic",
 
     "games" : ["sbc:test"],
-    "maps" : ["Red Comet"],
+    "maps" : ["Obsidian_1.5"],
     "engines" : [ "103.0.1-1222-g37dc534 develop" ],
 
 	"auto_download" : true,
@@ -16,5 +16,5 @@
     "no_downloads" : false,
 
 	"game_title": "SpringBoard",
-    "start_args" : ["--game", "rapid://sbc:test", "--map", "Red Comet"]
+    "start_args" : ["--game", "rapid://sbc:test", "--map", "Obsidian_1.5"]
 }
