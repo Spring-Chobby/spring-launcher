@@ -3,7 +3,11 @@ import pkgutil
 
 class ChobbyConfig(object):
     def __init__(self):
-        configFile = pkgutil.get_data("chobby_launcher", "config.json")
+        configFile = None
+        try:
+            configFile = pkgutil.get_data("chobby_launcher", "config.json")
+        except:
+            pass
         if configFile:
             configFile = configFile.decode('utf-8')
         else:
