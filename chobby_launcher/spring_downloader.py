@@ -78,17 +78,17 @@ class Downloader(QObject):
     def DownloadEngine(self, ver_string):
         self._MaybeMakeFolder()
         self.downloadStarted.emit(ver_string, "Engine")
-        self._Download([Platform.PR_DOWNLOADER_PATH, '--download-engine', ver_string, '--filesystem-writepath', self.FOLDER])
+        self._Download([Platform.PR_DOWNLOADER_PATH, '--filesystem-writepath', self.FOLDER, '--download-engine', ver_string])
 
     def DownloadGame(self, name):
         self._MaybeMakeFolder()
         self.downloadStarted.emit(name, "Game")
-        self._Download([Platform.PR_DOWNLOADER_PATH, '--download-game', name, '--filesystem-writepath', self.FOLDER])
+        self._Download([Platform.PR_DOWNLOADER_PATH, '--filesystem-writepath', self.FOLDER, '--download-game', name])
 
     def DownloadMap(self, name):
         self._MaybeMakeFolder()
         self.downloadStarted.emit(name, "Map")
-        self._Download([Platform.PR_DOWNLOADER_PATH, '--download-map', name, '--filesystem-writepath', self.FOLDER])
+        self._Download([Platform.PR_DOWNLOADER_PATH, '--filesystem-writepath', self.FOLDER, '--download-map', name])
 
 def test():
     dl = Downloader()
