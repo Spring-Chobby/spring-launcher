@@ -8,7 +8,6 @@ from spring_platform import Platform
 class Launcher(QObject):
     lobbyClosed = pyqtSignal(name='lobbyClosed')
     WRITE_FOLDER = os.getcwd() + "/data"
-    VERSION_STRING = "103.0.1-1222-g37dc534 develop"
 
     def StartChobby(self, ver_string, extraArgs=None):
         args = ["./data/engine/" + ver_string + "/" + Platform.SPRING_BIN,
@@ -20,7 +19,7 @@ class Launcher(QObject):
         self.lobbyClosed.emit()
 
     def GetGameEngineVersion(self):
-        return self.VERSION_STRING
+        return ""
 
         #TODO: Fix this abomination!
         _sync = unitsync.Unitsync("C:/Users/tzaeru/Documents/ChobbyWrapper/data/engine/103.0.1-1222-g37dc534 develop/unitsync.dll")
@@ -36,10 +35,3 @@ class Launcher(QObject):
         #print("Count: " + str(_sync.GetPrimaryModCount()))
         #print(_sync.AddAllArchives("Chobby"))
         #print(_sync.GetPrimaryModCount())
-
-def test():
-    launcher = Launcher()
-    launcher.StartChobby(launcher.GetGameEngineVersion())
-
-if __name__ == "__main__":
-    test()

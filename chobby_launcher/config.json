@@ -9,7 +9,7 @@
 
     "games" : ["sbc:test"],
     "maps" : ["Obsidian_1.5"],
-    "engines" : [ "103.0.1-1222-g37dc534 develop" ],
+    "engines" : [ "104.0.1-92-g4409317 maintenance" ],
 
 	"auto_download" : true,
 	"auto_start" : true,

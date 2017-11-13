@@ -147,7 +147,7 @@ class GUI(QMainWindow):
             extraArgs = None
             if self.config.start_args:
                 extraArgs = self.config.start_args
-            thread = Thread(target = self.launcher.StartChobby, args = (self.launcher.GetGameEngineVersion(), extraArgs))
+            thread = Thread(target = self.launcher.StartChobby, args = (self.config.engines[0], extraArgs))
             thread.start()
             self.hide()
             # NOTE: This **might** be needed for Windows; test!

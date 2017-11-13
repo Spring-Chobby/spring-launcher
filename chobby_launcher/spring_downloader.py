@@ -57,6 +57,7 @@ class Downloader(QObject):
         return lineType, data
 
     def _Download(self, args):
+        logging.info(" ".join(args))
         p = Popen(args, stdout=PIPE, stderr=STDOUT, universal_newlines=True)
         for line in iter(p.stdout.readline, ""):
             logging.info(line[:-1])
@@ -89,12 +90,3 @@ class Downloader(QObject):
         self._MaybeMakeFolder()
         self.downloadStarted.emit(name, "Map")
         self._Download([Platform.PR_DOWNLOADER_PATH, '--filesystem-writepath', self.FOLDER, '--download-map', name])
-
-def test():
-    dl = Downloader()
-    dl.DownloadGame()
-    dl.DownloadEngine(dl.GetGameEngineVersion())
-    dl.DownloadChobby()
-
-if __name__ == "__main__":
-    test()
