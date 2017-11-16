@@ -139,7 +139,7 @@ class GUI(QMainWindow):
                 else:
                     self.MaybeNextStep()
         elif self.currentAction == "start":
-            required_files = ["config.json", "springsettings.cfg"]
+            required_files = ["chobby_config.json", "springsettings.cfg"]
             for f in required_files:
                 if not os.path.exists(os.path.join(self.dl.FOLDER, f)):
                     shutil.copy(f, os.path.join(self.dl.FOLDER, f))

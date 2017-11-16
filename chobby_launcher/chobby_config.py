@@ -5,13 +5,13 @@ class ChobbyConfig(object):
     def __init__(self):
         configFile = None
         try:
-            configFile = pkgutil.get_data("chobby_launcher", "config.json")
+            configFile = pkgutil.get_data("chobby_launcher", "chobby_config.json")
         except:
             pass
         if configFile:
             configFile = configFile.decode('utf-8')
         else:
-            configFile = open("config.json", "r").read()
+            configFile = open("chobby_config.json", "r").read()
         json_data = json.loads(configFile)
 
         self.auto_download = json_data["auto_download"]
