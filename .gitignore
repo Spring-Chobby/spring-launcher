@@ -10,8 +10,8 @@ __pycache__/
 .Python
 env/
 build/
+chobby_launcher/dist/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
