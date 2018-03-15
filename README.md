@@ -1,11 +1,21 @@
 # Launcher
-A wrapper for Chobby to launch Chobby + engine + set default configs up, etc
+A wrapper for Spring to distribute and launch Spring games and Lua lobbies.
 
 ## Building natively (Recommended)
 
-1. source env/bin/activate # get in the virtual environment
-2. cd chobby_launcher # cd in the chobby_launcher directory
-3. pyinstaller --windowed launcher.spec -y # freeze
+Requirements: PyQT5, pyinstaller (for freezing)
+
+Setting up a virtualenv and installnig requirements:
+
+1. Setup a virtual environment: `virtualenv --python=/usr/bin/python3 env`
+2. Activate the virtual environment: `source env/bin/activate`
+2. Install dependencies: `pip install PyQT5 pyinstaller`
+
+Freezing:
+
+1. Activate the virtual environment: `source env/bin/activate`
+2. Change into the chobby_launcher directory: `cd chobby_launcher`
+3. Freeze it with pyinstaller: `pyinstaller --windowed launcher.spec -y`
 
 ## Building on Wine (Unsupported)
 

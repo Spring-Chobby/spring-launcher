@@ -10,7 +10,7 @@ __pycache__/
 .Python
 env/
 build/
-chobby_launcher/dist/
+spring_launcher/dist/
 develop-eggs/
 downloads/
 eggs/

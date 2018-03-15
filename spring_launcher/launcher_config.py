@@ -1,17 +1,17 @@
 import json
 import pkgutil
 
-class ChobbyConfig(object):
+class LauncherConfig(object):
     def __init__(self):
         configFile = None
         try:
-            configFile = pkgutil.get_data("chobby_launcher", "chobby_config.json")
+            configFile = pkgutil.get_data("spring_launcher", "config.json")
         except:
             pass
         if configFile:
             configFile = configFile.decode('utf-8')
         else:
-            configFile = open("chobby_config.json", "r").read()
+            configFile = open("config.json", "r").read()
         json_data = json.loads(configFile)
 
         self.auto_download = json_data["auto_download"]

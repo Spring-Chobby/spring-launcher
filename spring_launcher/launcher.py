@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QApplication
 
 if __name__ == '__main__':
 
-    logging.basicConfig(filename='chobby.log', level=logging.INFO, filemode='w')
+    logging.basicConfig(filename='launcher.log', level=logging.INFO, filemode='w')
     logging.info("Started logging...")
 
     from gui import GUI

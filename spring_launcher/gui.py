@@ -12,13 +12,13 @@ from PyQt5.QtGui import QFont, QColor, QFontDatabase
 
 from spring_downloader import Downloader
 from spring_launcher import Launcher
-from chobby_config import ChobbyConfig
+from launcher_config import LauncherConfig
 
 class GUI(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.config = ChobbyConfig()
+        self.config = LauncherConfig()
         self.initUI()
 
     def closeEvent(self, _):
@@ -139,7 +139,7 @@ class GUI(QMainWindow):
                 else:
                     self.MaybeNextStep()
         elif self.currentAction == "start":
-            required_files = ["chobby_config.json", "springsettings.cfg"]
+            required_files = ["config.json", "springsettings.cfg"]
             for f in required_files:
                 if not os.path.exists(os.path.join(self.dl.FOLDER, f)):
                     shutil.copy(f, os.path.join(self.dl.FOLDER, f))
@@ -147,7 +147,7 @@ class GUI(QMainWindow):
             extraArgs = None
             if self.config.start_args:
                 extraArgs = self.config.start_args
-            thread = Thread(target = self.launcher.StartChobby, args = (self.config.engines[0], extraArgs))
+            thread = Thread(target = self.launcher.StartLauncher, args = (self.config.engines[0], extraArgs))
             thread.start()
             self.hide()
             # NOTE: This **might** be needed for Windows; test!
