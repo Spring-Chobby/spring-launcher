@@ -14,7 +14,7 @@ Setting up a virtualenv and installnig requirements:
 Freezing:
 
 1. Activate the virtual environment: `source env/bin/activate`
-2. Change into the chobby_launcher directory: `cd chobby_launcher`
+2. Change into the spring_launcher directory: `cd spring_launcher`
 3. Freeze it with pyinstaller: `pyinstaller --windowed launcher.spec -y`
 
 ## Building on Wine (Unsupported)
@@ -27,9 +27,9 @@ docker build . -t chwine
 
 Then to create a frozen release run the following command from the root of the repository:
 
-docker run -v $PWD/chobby_launcher:/chobby_launcher chwine /bin/sh -c 'cd chobby_launcher; wine /home/user/.wine/drive_c/Python35-32/Scripts/pyinstaller.exe --noconsole la
+docker run -v $PWD/spring_launcher:/spring_launcher chwine /bin/sh -c 'cd spring_launcher; wine /home/user/.wine/drive_c/Python35-32/Scripts/pyinstaller.exe --noconsole la
 uncher.spec -y'
 
 To test the frozen release (doesn't work for me), run the below:
 
-docker run --net host -e DISPLAY=$DISPLAY -v $PWD/chobby_launcher:/chobby_launcher  chwine /bin/sh -c 'cd chobby_launcher; wine dist/launcher/launcher.exe'
+docker run --net host -e DISPLAY=$DISPLAY -v $PWD/spring_launcher:/spring_launcher  chwine /bin/sh -c 'cd spring_launcher; wine dist/launcher/launcher.exe'

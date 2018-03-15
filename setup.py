@@ -10,7 +10,7 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-PKGNAME = 'chobby_launcher'
+PKGNAME = 'spring_launcher'
 pkg = __import__( PKGNAME )
 
 setup(
@@ -21,7 +21,7 @@ setup(
     # https://packaging.python.org/en/latest/single_source_version.html
     version='1.0',
 
-    description='Chobby Launcher',
+    description='Spring Launcher',
     long_description=long_description,
 
     # The project's main homepage.
@@ -51,7 +51,7 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords='springrts chobby lobby',
+    keywords='springrts launcher dist',
 
     # entry_points = { 'console_scripts': [
     #     'jupyter-spring_kernel = spring_kernel.__main__:main',
