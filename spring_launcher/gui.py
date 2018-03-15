@@ -13,16 +13,26 @@ from PyQt5.QtGui import QFont, QColor, QFontDatabase
 from spring_downloader import SpringDownloader
 from engine_launcher import EngineLauncher
 from launcher_config import LauncherConfig
+from spring_connector import SpringConnector
 
 class GUI(QMainWindow):
     def __init__(self):
         super().__init__()
 
         self.config = LauncherConfig()
+        if self.config.local_connection is not None:
+            logging.info("Local connection available at {}:{}".format(
+                                      self.config.local_connection["host"],
+                                      self.config.local_connection["port"]))
+            self.sc = SpringConnector(self.config.local_connection["host"],
+                                      self.config.local_connection["port"])
+    #         self.sc.register("CompileMap", self.compileMap)
+            self.sc_thread = Thread(target = self.sc.listen)
+            self.sc_thread.start()
         self.initUI()
 
     def closeEvent(self, _):
-        sys.exit(0)
+        os._exit(1)
 
     def initUI(self):
         fontPath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'font/Audiowide-Regular.ttf')

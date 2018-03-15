@@ -14,6 +14,17 @@ class LauncherConfig(object):
             configFile = open("config.json", "r").read()
         json_data = json.loads(configFile)
 
+        local_connection = {
+            "host": None,
+            "port": None
+        }
+        try:
+            local_connection["host"] = json_data["local_connection"]["host"]
+            local_connection["port"] = json_data["local_connection"]["port"]
+            self.local_connection = local_connection
+        except:
+            self.local_connection = None
+
         self.auto_download = json_data["auto_download"]
         self.auto_start = json_data["auto_start"]
         self.no_downloads = json_data["no_downloads"]
