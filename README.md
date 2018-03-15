@@ -3,9 +3,9 @@ A wrapper for Spring to distribute and launch Spring games and Lua lobbies.
 
 ## Building natively (Recommended)
 
-Requirements: PyQT5, pyinstaller (for freezing)
+Requirements: PyQT5, pyinstaller (for freezing). See additional Python version restrictions for pyinstaller: https://github.com/pyinstaller/pyinstaller
 
-Setting up a virtualenv and installnig requirements:
+Setting up a virtualenv and installing requirements:
 
 1. Setup a virtual environment: `virtualenv --python=/usr/bin/python3 env`
 2. Activate the virtual environment: `source env/bin/activate`

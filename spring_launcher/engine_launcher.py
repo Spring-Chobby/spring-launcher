@@ -3,14 +3,14 @@ import os
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
-from spring_platform import Platform
+from spring_platform import SpringPlatform
 
-class Launcher(QObject):
+class EngineLauncher(QObject):
     lobbyClosed = pyqtSignal(name='lobbyClosed')
     WRITE_FOLDER = os.getcwd() + "/data"
 
     def StartLauncher(self, ver_string, extraArgs=None):
-        args = ["./data/engine/" + ver_string + "/" + Platform.SPRING_BIN,
+        args = ["./data/engine/" + ver_string + "/" + SpringPlatform.SPRING_BIN,
             "--write-dir", self.WRITE_FOLDER]
         if extraArgs is not None:
              args = args + extraArgs

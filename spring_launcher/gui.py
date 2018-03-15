@@ -10,8 +10,8 @@ from PyQt5.QtWidgets import QWidget, QPushButton, QApplication, QLabel, QMainWin
 from PyQt5.QtCore import QCoreApplication, QTimer, pyqtSlot
 from PyQt5.QtGui import QFont, QColor, QFontDatabase
 
-from spring_downloader import Downloader
-from spring_launcher import Launcher
+from spring_downloader import SpringDownloader
+from engine_launcher import EngineLauncher
 from launcher_config import LauncherConfig
 
 class GUI(QMainWindow):
@@ -61,12 +61,12 @@ class GUI(QMainWindow):
         self.setWindowTitle(self.config.game_title)
         self.show()
 
-        self.dl = Downloader()
+        self.dl = SpringDownloader()
         self.dl.downloadStarted.connect(self.OnDownloadStarted)
         self.dl.downloadFinished.connect(self.OnDownloadFinished)
         self.dl.downloadFailed.connect(self.OnDownloadFailed)
         self.dl.downloadProgress.connect(self.OnDownloadProgress)
-        self.launcher = Launcher()
+        self.launcher = EngineLauncher()
         self.launcher.lobbyClosed.connect(self.OnLobbyClosed)
 
         self.games = copy.deepcopy(self.config.games)

@@ -5,9 +5,9 @@ import logging
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
-from spring_platform import Platform
+from spring_platform import SpringPlatform
 
-class Downloader(QObject):
+class SpringDownloader(QObject):
     downloadStarted = pyqtSignal(str, str, name='downloadStarted')
     downloadFinished = pyqtSignal(name='downloadFinished')
     downloadFailed = pyqtSignal(str, name='downloadFailed')
@@ -79,14 +79,14 @@ class Downloader(QObject):
     def DownloadEngine(self, ver_string):
         self._MaybeMakeFolder()
         self.downloadStarted.emit(ver_string, "Engine")
-        self._Download([Platform.PR_DOWNLOADER_PATH, '--filesystem-writepath', self.FOLDER, '--download-engine', ver_string])
+        self._Download([SpringPlatform.PR_DOWNLOADER_PATH, '--filesystem-writepath', self.FOLDER, '--download-engine', ver_string])
 
     def DownloadGame(self, name):
         self._MaybeMakeFolder()
         self.downloadStarted.emit(name, "Game")
-        self._Download([Platform.PR_DOWNLOADER_PATH, '--filesystem-writepath', self.FOLDER, '--download-game', name])
+        self._Download([SpringPlatform.PR_DOWNLOADER_PATH, '--filesystem-writepath', self.FOLDER, '--download-game', name])
 
     def DownloadMap(self, name):
         self._MaybeMakeFolder()
         self.downloadStarted.emit(name, "Map")
-        self._Download([Platform.PR_DOWNLOADER_PATH, '--filesystem-writepath', self.FOLDER, '--download-map', name])
+        self._Download([SpringPlatform.PR_DOWNLOADER_PATH, '--filesystem-writepath', self.FOLDER, '--download-map', name])

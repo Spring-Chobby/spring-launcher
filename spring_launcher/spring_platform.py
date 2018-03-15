@@ -2,7 +2,7 @@ import sys
 import platform
 import logging
 
-class Platform(object):
+class SpringPlatform(object):
     platformName = platform.system()
     if platformName == "Windows":
         PR_DOWNLOADER_PATH = "./bin/pr-downloader.exe"
