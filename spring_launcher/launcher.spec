@@ -40,7 +40,6 @@ print(a.datas)
 a.datas += extra_datas(".", norecurse=True)
 if os.path.isfile("exts"): # Add extensions if they exist
     a.datas += extra_datas("./exts")
-end
 a.datas += extra_datas("./unitsync")
 a.datas += extra_datas("./bin")
 print(a.datas)
