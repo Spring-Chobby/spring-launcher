@@ -1,37 +1,96 @@
-# Imports
-from client_config import ClientConfig
-from pyupdater.client import Client
+import platform
+import os
+import logging
+import json
 
-# Constants
-APP_NAME = 'Acme'
-APP_VERSION = '1.0'
+import requests
+from requests.compat import urljoin, quote_plus
 
-LIB_NAME = 'My external library'
-LIB_VERSON = '2.4.1'
+# TODO: Properly use mirrors and load them from a file (which is also synced)
+mirrors = ["http://tzaeru.com:4445/"]
 
-# This could potentially cause slow app start up time.
-# You could use client = Client(ClientConfig()) and call
-# client.refresh() before you check for updates
-client = Client(ClientConfig(), refresh=True)
+platformToDir = {
+    "Linux": "linux",
+    "Darwin": "mac",
+    "Windows": "windows"
+}
 
-# Returns an update object
-update = client.update_check(APP_NAME, APP_VERSION)
+platformDir = platformToDir[platform.system()]
 
-# Optionally you can use release channels
-# Channel options are stable, beta & alpha
-# Note: Patches are only created & applied on the stable channel
-app_update = client.update_check(APP_NAME, APP_VERSION, channel='stable')
-lib_update = client.update_check(LIB_NAME, LIB_VERSON)
+def try_get(resource):
+    #quoted = quote_plus(resource)
+    for m in mirrors:
+        url = urljoin(m, resource)
+        r = requests.get(url)
+        return r
 
-# Use the update object to download an update & restart the app
-if app_update is not None:
-    downloaded = app_update.download()
-    if downloaded is True:
-        app_update.extract_restart()
+def download_file(url, path):
+    logging.info("Download file: {} from URL: {}".format(path, url))
+    parent = os.path.dirname(path)
+    if not os.path.exists(parent):
+        os.makedirs
 
-# It's also possible to update an external library, file or anything else needed by your application.
-if lib_update is not None:
-    downloaded = lib_update.download()
-    if downloaded is True:
-        # The path to the archive.
-        lib_update.abspath
+    mirror = mirrors[0]
+    url = mirror + "download?path=" + url
+    r = requests.get(url, stream=True)
+    with open(path, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk:
+                f.write(chunk)
+
+def synchronize():
+    res = try_get("files/")
+    meta = res.json()
+    for file, checksum in meta["spring-launcher-dist"].items():
+        checksum = checksum["checksum"]
+        parts = file.split("/")
+
+        if parts[0] != platformDir:
+            continue
+
+        path = os.sep.join(parts[1:])
+
+        download_url = "spring-launcher-dist/" + file
+        if os.path.exists(path):
+            local_checksum = calc_file_checksum(path)
+            if checksum != local_checksum:
+                logging.info("Different file: {}".format(path))
+                download_file(download_url, path)
+        else:
+            logging.info("Missing file: {}".format(path))
+            download_file(download_url, path)
+
+
+# TODO: separate module
+
+from sys import argv
+from hashlib import sha1
+from io import BytesIO
+
+class githash(object):
+    def __init__(self):
+        self.buf = BytesIO()
+
+    def update(self, data):
+        self.buf.write(data)
+
+    def hexdigest(self):
+        data = self.buf.getvalue()
+        h = sha1()
+        h.update(("blob %u\0" % len(data)).encode())
+        #h.update()
+        h.update(data)
+
+        return h.hexdigest()
+
+def githash_data(data):
+    h = githash()
+    h.update(data)
+    return h.hexdigest()
+
+def githash_fileobj(fileobj):
+    return githash_data(fileobj.read())
+
+def calc_file_checksum(path):
+    fileobj = open(path, "rb")
+    return githash_fileobj(fileobj)
