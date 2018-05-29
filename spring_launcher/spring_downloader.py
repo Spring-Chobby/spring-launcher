@@ -93,10 +93,8 @@ class SpringDownloader(QObject):
         self.downloadStarted.emit(name, "Map")
         self._Download([SpringPlatform.PR_DOWNLOADER_PATH, '--filesystem-writepath', self.FOLDER, '--download-map', name])
 
-    def SelfUpdate(self):
+    def SelfUpdate(self, launcher_game_id):
         import sys
-
-        config_name = 'myapp.cfg'
 
         # determine if application is a script file or frozen exe
         if not getattr(sys, 'frozen', False):
@@ -104,11 +102,16 @@ class SpringDownloader(QObject):
             self.downloadFinished.emit()
             return
 
-        update_list = auto_update.get_update_list()
+        update_list = auto_update.get_update_list(launcher_game_id)
 
         if len(update_list) == 0:
             logging.info("No-self update necessary.")
             return
+
+        logging.info("Update list: ")
+        for i, update in enumerate(update_list):
+            logging.info("{}. {} : {:.1f}kB".format(i, update["path"], update["size"] / 1024))
+
         self.dl_so_far = 0
         self.dl_total = sum([up["size"] for up in update_list])
 
@@ -119,6 +122,13 @@ class SpringDownloader(QObject):
         logging.info("Starting self-update...")
         self.downloadStarted.emit("Updating: ", "self")
         auto_update.download_files(update_list, callback)
-        logging.info("Self-update completed.")
+        logging.info("Self-update completed - restarting.")
+
+        # TODO: restarting and self-overwriting is a bit more complicated :|
+        # See how other people do it: https://github.com/JMSwag/PyUpdater/blob/4067f9e05f3d1aa7cdec79296824c69cb7510545/pyupdater/client/updates.py
+        if False:
+            python = sys.executable
+            os.execl(python, python, *sys.argv)
+            return
 
         self.downloadFinished.emit()

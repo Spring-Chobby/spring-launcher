@@ -55,22 +55,24 @@ def download_file(url, path, callback):
     # content_length = r.headers.get('Content-length')
     # content_length = int(content_length)
 
-    #with open(path, 'wb') as f:
-    chunks_so_far = 0
-    for chunk in r.iter_content(chunk_size=1024):
-        if chunk:
-            f.write(chunk)
-            callback(len(chunk))
-            chunks_so_far += len(chunk)
+    with open(path, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk:
+                f.write(chunk)
+                callback(len(chunk))
 
     logging.info("Downloaded: {}".format(path))
 
-def get_update_list():
+def get_update_list(launcher_game_id):
     '''
     returns list of files requiring an update, as dictionaries with keys:
     relURL, path, size
     '''
-    update_list = []
+
+    # We use the update list as a dictionary so newer paths overwrite older ones
+    # This would allow games to overwrite default launcher files
+    # In a way it works similar to how Spring mutators work
+    update_list = {}
 
     res = try_get("files/")
     meta = res.json()
@@ -82,24 +84,54 @@ def get_update_list():
             continue
 
         path = os.sep.join(parts[1:])
+        if path.strip() == "":
+            print(file)
 
         download_url = "spring-launcher-dist/" + file
         if os.path.exists(path):
             local_checksum = calc_file_checksum(path)
             if checksum != local_checksum:
-                update_list.append({
+                update_list[path] = {
                     "url" : download_url,
                     "path" : path,
                     "size" : -1,
-                })
-                logging.info("Different file: {}".format(path))
+                }
+                #logging.info("Different file: {}".format(path))
         else:
-            logging.info("Missing file: {}".format(path))
-            update_list.append({
+            #logging.info("Missing file: {}".format(path))
+            update_list[path] = {
                 "url" : download_url,
                 "path" : path,
                 "size" : -1,
-            })
+            }
+
+    res = try_get("files/{}".format(launcher_game_id))
+    if res.status_code == requests.codes.ok:
+        meta = res.json()
+        top_key = list(meta.keys())[0]
+        for path, keys in meta[top_key].items():
+            download_url = keys["path"]
+            checksum = keys["checksum"]
+
+            if os.path.exists(path):
+                local_checksum = calc_file_checksum(path)
+                if checksum != local_checksum:
+                    update_list[path] = {
+                        "url" : download_url,
+                        "path" : path,
+                        "size" : -1,
+                    }
+                    #logging.info("Different file: {}".format(path))
+            else:
+                #logging.info("Missing file: {}".format(path))
+                update_list[path] = {
+                    "url" : download_url,
+                    "path" : path,
+                    "size" : -1,
+                }
+    update_list = list(update_list.values())
+    # TODO: the update list should also tell us what to *delete*
+
 
     if len(update_list) == 0:
         return update_list

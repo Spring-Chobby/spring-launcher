@@ -31,6 +31,8 @@ class LauncherConfig(object):
 
         self.game_title = json_data["game_title"]
 
+        self.launcher_game_id = json_data["launcher_game_id"]
+
         self.games = json_data.get("games", [])
         self.maps = json_data.get("maps", [])
         self.engines = json_data.get("engines", [])

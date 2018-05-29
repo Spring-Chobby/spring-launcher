@@ -121,7 +121,8 @@ class GUI(QMainWindow):
 
         if self.currentAction == "autoupdate":
             logging.warning("Checking for autoupdate")
-            thread = Thread(target = self.dl.SelfUpdate)
+            self.btnAction.setText("Checking for self-updates...")
+            thread = Thread(target = self.dl.SelfUpdate, args = (self.config.launcher_game_id,))
             thread.start()
         elif self.currentAction == "packages":
             if len(self.games) != 0:
