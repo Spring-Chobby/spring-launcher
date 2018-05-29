@@ -4,16 +4,13 @@
 import sys
 import logging
 
-import auto_update
-
 from PyQt5.QtWidgets import QApplication
 
 if __name__ == '__main__':
 
-    logging.basicConfig(filename='launcher.log', level=logging.INFO, filemode='w')
+    FORMAT = '%(asctime)s %(levelname)s:%(message)s'
+    logging.basicConfig(filename='launcher.log', level=logging.INFO, filemode='w', format=FORMAT)
     logging.info("Started logging...")
-
-    auto_update.synchronize()
 
     from gui import GUI
     app = QApplication(sys.argv)

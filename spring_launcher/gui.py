@@ -120,8 +120,9 @@ class GUI(QMainWindow):
         self.btnAction.setEnabled(False)
 
         if self.currentAction == "autoupdate":
-            logging.warning("Implement autoupdate")
-            self.MaybeNextStep()
+            logging.warning("Checking for autoupdate")
+            thread = Thread(target = self.dl.SelfUpdate)
+            thread.start()
         elif self.currentAction == "packages":
             if len(self.games) != 0:
                 self.actions = ["packages"] + self.actions

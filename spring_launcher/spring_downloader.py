@@ -1,11 +1,13 @@
 import re
 from subprocess import Popen, PIPE, STDOUT
+import sys
 import os
 import logging
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
 from spring_platform import SpringPlatform
+import auto_update
 
 class SpringDownloader(QObject):
     downloadStarted = pyqtSignal(str, str, name='downloadStarted')
@@ -90,3 +92,33 @@ class SpringDownloader(QObject):
         self._MaybeMakeFolder()
         self.downloadStarted.emit(name, "Map")
         self._Download([SpringPlatform.PR_DOWNLOADER_PATH, '--filesystem-writepath', self.FOLDER, '--download-map', name])
+
+    def SelfUpdate(self):
+        import sys
+
+        config_name = 'myapp.cfg'
+
+        # determine if application is a script file or frozen exe
+        if not getattr(sys, 'frozen', False):
+            logging.info("Self-update only done for frozen apps.")
+            self.downloadFinished.emit()
+            return
+
+        update_list = auto_update.get_update_list()
+
+        if len(update_list) == 0:
+            logging.info("No-self update necessary.")
+            return
+        self.dl_so_far = 0
+        self.dl_total = sum([up["size"] for up in update_list])
+
+        def callback(chunk_size):
+            self.dl_so_far += chunk_size
+            self.downloadProgress.emit(self.dl_so_far, self.dl_total)
+
+        logging.info("Starting self-update...")
+        self.downloadStarted.emit("Updating: ", "self")
+        auto_update.download_files(update_list, callback)
+        logging.info("Self-update completed.")
+
+        self.downloadFinished.emit()
