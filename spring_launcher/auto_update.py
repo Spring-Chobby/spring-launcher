@@ -1,5 +1,6 @@
 import platform
 import os
+import stat
 import logging
 import json
 
@@ -45,7 +46,12 @@ def download_file(url, path, callback):
     logging.info("Download file: {} from URL: {}".format(path, url))
     parent = os.path.dirname(path)
     if parent.strip() != "" and not os.path.exists(parent):
-        os.makedirs(parent)
+        logging.debug("Making subdirs because they do not exist: {}".format(parent))
+        try:
+            os.makedirs(parent)
+        except FileExistsError as e:
+            # ignore file exists error due to race conditions
+            pass
 
     mirror = mirrors[0]
     url = mirror + "download?path=" + url
@@ -55,12 +61,22 @@ def download_file(url, path, callback):
     # content_length = r.headers.get('Content-length')
     # content_length = int(content_length)
 
+    # FIXME: we are deleting files before new ones are downloaded
+    # This is bad and wrong.
+    old_permissions = None
+    if os.path.exists(path):
+        logging.info("Removing existing file: {}".format(path))
+        old_permissions = os.stat(path).st_mode
+        os.remove(path)
+
     with open(path, 'wb') as f:
         for chunk in r.iter_content(chunk_size=1024):
             if chunk:
                 f.write(chunk)
                 callback(len(chunk))
 
+    if old_permissions is not None:
+        os.chmod(path, old_permissions)
     logging.info("Downloaded: {}".format(path))
 
 def get_update_list(launcher_game_id):

@@ -126,9 +126,9 @@ class SpringDownloader(QObject):
 
         # TODO: restarting and self-overwriting is a bit more complicated :|
         # See how other people do it: https://github.com/JMSwag/PyUpdater/blob/4067f9e05f3d1aa7cdec79296824c69cb7510545/pyupdater/client/updates.py
-        if False:
-            python = sys.executable
-            os.execl(python, python, *sys.argv)
-            return
+        python = sys.executable
+        os.execl(python, python, *sys.argv)
+        # This function stops the application before ever sendnig the downloadFinished signal
+        return
 
-        self.downloadFinished.emit()
+        # self.downloadFinished.emit()
