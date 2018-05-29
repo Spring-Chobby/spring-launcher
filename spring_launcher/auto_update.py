@@ -59,7 +59,7 @@ def download_file(url, path, callback):
     chunks_so_far = 0
     for chunk in r.iter_content(chunk_size=1024):
         if chunk:
-            #f.write(chunk)
+            f.write(chunk)
             callback(len(chunk))
             chunks_so_far += len(chunk)
 
