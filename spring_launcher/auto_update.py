@@ -61,8 +61,6 @@ def download_file(url, path, callback):
     # content_length = r.headers.get('Content-length')
     # content_length = int(content_length)
 
-    # FIXME: we are deleting files before new ones are downloaded
-    # This is bad and wrong.
     old_permissions = None
     if os.path.exists(path):
         logging.info("Removing existing file: {}".format(path))
@@ -89,6 +87,7 @@ def get_update_list(launcher_game_id):
     # This would allow games to overwrite default launcher files
     # In a way it works similar to how Spring mutators work
     update_list = {}
+    existing_list = {}
 
     res = try_get("files/")
     meta = res.json()
@@ -113,6 +112,11 @@ def get_update_list(launcher_game_id):
                     "size" : -1,
                 }
                 #logging.info("Different file: {}".format(path))
+            else:
+                existing_list[path] = {
+                    "url" : download_url,
+                    "path" : path,
+                }
         else:
             #logging.info("Missing file: {}".format(path))
             update_list[path] = {
@@ -138,6 +142,13 @@ def get_update_list(launcher_game_id):
                         "size" : -1,
                     }
                     #logging.info("Different file: {}".format(path))
+                    if path in existing_list:
+                        del existing_list[path]
+                else:
+                    existing_list[path] = {
+                        "url" : download_url,
+                        "path" : path,
+                    }
             else:
                 #logging.info("Missing file: {}".format(path))
                 update_list[path] = {
@@ -146,8 +157,6 @@ def get_update_list(launcher_game_id):
                     "size" : -1,
                 }
     update_list = list(update_list.values())
-    # TODO: the update list should also tell us what to *delete*
-
 
     if len(update_list) == 0:
         return update_list
@@ -164,7 +173,7 @@ def get_update_list(launcher_game_id):
     for i, size in enumerate(sizes):
         update_list[i]["size"] = size
 
-    return update_list
+    return update_list, existing_list
 
 
 # TODO: separate module

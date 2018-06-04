@@ -120,7 +120,7 @@ class GUI(QMainWindow):
         self.btnAction.setEnabled(False)
 
         if self.currentAction == "autoupdate":
-            logging.warning("Checking for autoupdate")
+            logging.info("Checking for autoupdate")
             self.btnAction.setText("Checking for self-updates...")
             thread = Thread(target = self.dl.SelfUpdate, args = (self.config.launcher_game_id,))
             thread.start()
