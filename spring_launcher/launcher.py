@@ -24,10 +24,14 @@ def main():
         import shutil
         for file_name in os.listdir(CURR_DIR):
             file_path = os.path.join(CURR_DIR, file_name)
-            if os.path.isfile(file_path):
-                os.remove(file_path)
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
+            try:
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                logging.error("Failed to delete: {} with error: {}".format(
+                                            file_path, e))
 
         logging.info("Step 6. Move Temp Path files to current")
         for file_name in os.listdir(TEMP_DIR):
