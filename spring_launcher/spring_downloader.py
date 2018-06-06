@@ -125,6 +125,7 @@ class SpringDownloader(QObject):
 
         if len(update_list) == 0:
             logging.info("No-self update necessary.")
+            self.downloadFinished.emit()
             return
 
         # Update procedure:
