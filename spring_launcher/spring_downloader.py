@@ -127,17 +127,17 @@ class SpringDownloader(QObject):
             logging.info("No-self update necessary.")
             return
 
-        logging.info("Copying existing files...")
+        # Update procedure:
+        # 1. Download to Temp Path
+        # 2. Move data and maybe some other stuff (logs?) to Temp Path
+        # 3. Copy existing to Backup Dir
+        # 4. Launch Backup Dir/launcher to do final replacement
+        # 5. Delete files in current
+        # 6. Move Temp Path files to current
+        # 7. Launch current/launcher and resume normal operations
+
 
         TMP_DIR = self.__mkdtemp()
-
-        for existing in existing_list.values():
-            logging.info("Copying: {}".format(existing["path"]))
-            dest_path = os.path.join(TMP_DIR, existing["path"])
-            dest_dir  = os.path.dirname(dest_path)
-            if not os.path.exists(dest_dir):
-                os.makedirs(dest_dir)
-            shutil.copy2(existing["path"], dest_path)
 
         logging.info("Update list: ")
         for i, update in enumerate(update_list):
@@ -151,13 +151,21 @@ class SpringDownloader(QObject):
             self.dl_so_far += chunk_size
             self.downloadProgress.emit(self.dl_so_far, self.dl_total)
 
+        logging.info("Step 1. Download to Temp Path")
         logging.info("Starting self-update...")
         self.downloadStarted.emit("Updating: ", "self")
         auto_update.download_files(update_list, callback)
         logging.info("Self-update completed - restarting.")
 
-        # TODO: restarting and self-overwriting is a bit more complicated :|
-        # See how other people do it: https://github.com/JMSwag/PyUpdater/blob/4067f9e05f3d1aa7cdec79296824c69cb7510545/pyupdater/client/updates.py
+        logging.info("Step 1.1. Copy identical existing files to Temp Path")
+        logging.info("Copying existing files...")
+        for existing in existing_list.values():
+            logging.info("Copying: {}".format(existing["path"]))
+            dest_path = os.path.join(TMP_DIR, existing["path"])
+            dest_dir  = os.path.dirname(dest_path)
+            if not os.path.exists(dest_dir):
+                os.makedirs(dest_dir)
+            shutil.copy2(existing["path"], dest_path)
 
         # sometimes this could be python, but we ignore this
         # executable = sys.executable
@@ -168,22 +176,34 @@ class SpringDownloader(QObject):
             logging.info("Setting proper file mode: {}".format(executable))
             os.chmod(executable, stat.S_IREAD | stat.S_IWRITE | stat.S_IEXEC)
 
+        logging.info("Step 2. Move data and maybe some other stuff (logs?) to Temp Path")
         if os.path.exists("data"):
             shutil.move("data", TMP_DIR)
 
         curr_path = os.path.abspath(".")
 
-        TMP_DIR2 = self.__mkdtemp()
-        # Move current install
-        shutil.move(curr_path, TMP_DIR2)
+        BK_DIR = self.__mkdtemp()
+        logging.info("Step 3. Copy existing to backup")
+        print(curr_path, BK_DIR)
+        os.rmdir(BK_DIR)
+        shutil.copytree(curr_path, BK_DIR)
+
+        logging.info("Step 4. Launch Backup Dir/launcher to do final replacement")
+        executable = os.path.join(BK_DIR, sys.argv[0])
+        print(executable, "ARGV:", sys.argv)
+        # WARNING: We don't support passing old input arguments to the new executable
+        print(executable, executable, os.path.basename(executable), *["--temp", TMP_DIR, "--current", curr_path])
+        #os.execl(executable, executable, os.path.basename(executable), *["--temp", TMP_DIR, "--current", curr_path])
+        os.execl(executable, executable, *["--temp", TMP_DIR, "--current", curr_path])
+
         # Set new install
         shutil.move(TMP_DIR, curr_path)
 
         # Preserve old install
-        # shutil.move(TMP_DIR2, os.path.join(curr_path, TMP_DIR))
+        # shutil.move(BK_DIR, os.path.join(curr_path, TMP_DIR))
 
         # Remove old install
-        shutil.rmtree(TMP_DIR2)
+        shutil.rmtree(BK_DIR)
         executable = sys.executable
 
         logging.info("Restarting into: {}".format(sys.argv))

@@ -194,3 +194,8 @@ class GUI(QMainWindow):
 
     def OnBtnClick(self):
         self.MaybeNextStep()
+
+def start():
+    app = QApplication(sys.argv)
+    ex = GUI()
+    sys.exit(app.exec_())
