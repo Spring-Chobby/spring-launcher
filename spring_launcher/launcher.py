@@ -37,6 +37,13 @@ def main():
 
         executable = os.path.join(CURR_DIR, sys.argv[0])
         #os.execl(executable, executable, os.path.basename(executable))
+        import psutil
+        try:
+            p = psutil.Process(os.getpid())
+            for handler in p.get_open_files() + p.connections():
+                os.close(handler.fd)
+        except Exception as e:
+            logging.error(e)
         os.execl(executable, executable)
         # 7. Launch current/launcher and resume normal operations
 

@@ -194,6 +194,16 @@ class SpringDownloader(QObject):
         # WARNING: We don't support passing old input arguments to the new executable
         print(executable, executable, os.path.basename(executable), *["--temp", TMP_DIR, "--current", curr_path])
         #os.execl(executable, executable, os.path.basename(executable), *["--temp", TMP_DIR, "--current", curr_path])
+
+        import psutil
+        try:
+            p = psutil.Process(os.getpid())
+            for handler in p.get_open_files() + p.connections():
+                os.close(handler.fd)
+        except Exception as e:
+            logging.error(e)
+
+
         os.execl(executable, executable, *["--temp", TMP_DIR, "--current", curr_path])
 
         # Set new install
