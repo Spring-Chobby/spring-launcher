@@ -159,7 +159,7 @@ def get_update_list(launcher_game_id):
     update_list = list(update_list.values())
 
     if len(update_list) == 0:
-        return update_list
+        return update_list, existing_list
 
     m = mirrors[0]
     urls = [urljoin(m, "download?path=" + up["url"]) for up in update_list]
