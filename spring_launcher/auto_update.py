@@ -3,12 +3,13 @@ import os
 import stat
 import logging
 import json
-
 import concurrent
 from concurrent.futures import ThreadPoolExecutor
 
 import requests
 from requests.compat import urljoin, quote_plus
+
+from .githash import calc_file_checksum
 
 # TODO: Properly use mirrors and load them from a file (which is also synced)
 mirrors = ["http://tzaeru.com:4445/"]
@@ -19,8 +20,6 @@ platformToDir = {
     "Windows": "windows"
 }
 
-platformDir = platformToDir[platform.system()]
-
 def try_get(resource):
     #quoted = quote_plus(resource)
     for m in mirrors:
@@ -28,9 +27,14 @@ def try_get(resource):
         r = requests.get(url)
         return r
 
-def download_files(update_list, callback):
+def download_files(update_list, callback=None, root_path=None):
+    if root_path is None:
+        root_path = os.getcwd()
     def dl_file(update):
-        download_file(update["url"], update["path"], callback)
+        download_file(update["server_path"],
+                      os.path.join(root_path, update["local_path"]),
+                      checksum=update["checksum"],
+                      callback=callback)
 
     with ThreadPoolExecutor(max_workers=20) as pool:
         future_to_update = {pool.submit(dl_file, update): update for update in update_list}
@@ -42,7 +46,7 @@ def download_files(update_list, callback):
                 logging.error('%r generated an exception: %s' % (update, exc))
                 raise exc
 
-def download_file(url, path, callback):
+def download_file(url, path, checksum=None, callback=None, max_attempts=5):
     logging.info("Download file: {} from URL: {}".format(path, url))
     parent = os.path.dirname(path)
     if parent.strip() != "" and not os.path.exists(parent):
@@ -67,21 +71,29 @@ def download_file(url, path, callback):
         old_permissions = os.stat(path).st_mode
         os.remove(path)
 
-    with open(path, 'wb') as f:
-        for chunk in r.iter_content(chunk_size=1024):
-            if chunk:
-                f.write(chunk)
-                callback(len(chunk))
+    retry_count = 0
+    while True:
+        with open(path, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=1024):
+                if chunk:
+                    f.write(chunk)
+                    if callback is not None:
+                        callback(len(chunk))
+        if checksum is None or calc_file_checksum(path) == checksum:
+            break
+        elif retry_count >= max_attempts:
+            raise Exception("Failed to download correct file: {} after {} attempts".format(url, max_attempts))
+        else: # try again
+            retry_count += 1
+            os.remove(path)
+            r = requests.get(url, stream=True)
 
     if old_permissions is not None:
         os.chmod(path, old_permissions)
     logging.info("Downloaded: {}".format(path))
 
-def get_update_list(launcher_game_id):
-    '''
-    returns list of files requiring an update, as dictionaries with keys:
-    relURL, path, size
-    '''
+def get_update_list(launcher_game_id, root_path=None):
+    platformDir = platformToDir[platform.system()]
 
     # We use the update list as a dictionary so newer paths overwrite older ones
     # This would allow games to overwrite default launcher files
@@ -89,80 +101,56 @@ def get_update_list(launcher_game_id):
     update_list = {}
     existing_list = {}
 
-    res = try_get("files/")
-    meta = res.json()
-    for file, checksum in meta["spring-launcher-dist"].items():
-        checksum = checksum["checksum"]
-        parts = file.split("/")
+    if root_path is None:
+        root_path = os.getcwd()
 
+    res = try_get("files/")
+    manifest = res.json()
+
+    def _resolve_file(path, download_url, checksum):
+        item = {
+            "server_path": download_url,
+            "local_path": path,
+            "checksum": checksum,
+        }
+        if os.path.exists(path):
+            local_checksum = calc_file_checksum(path)
+            if checksum != local_checksum:
+                update_list[path] = item
+            else:
+                if path in existing_list:
+                    del existing_list[path]
+                existing_list[path] = item
+        else:
+            update_list[path] = item
+
+    for file, keys in manifest["spring-launcher-dist"].items():
+        checksum = keys["checksum"]
+        parts = file.split("/")
         if parts[0] != platformDir:
             continue
 
         path = os.sep.join(parts[1:])
-        if path.strip() == "":
-            print(file)
 
         download_url = "spring-launcher-dist/" + file
-        if os.path.exists(path):
-            local_checksum = calc_file_checksum(path)
-            if checksum != local_checksum:
-                update_list[path] = {
-                    "url" : download_url,
-                    "path" : path,
-                    "size" : -1,
-                }
-                #logging.info("Different file: {}".format(path))
-            else:
-                existing_list[path] = {
-                    "url" : download_url,
-                    "path" : path,
-                }
-        else:
-            #logging.info("Missing file: {}".format(path))
-            update_list[path] = {
-                "url" : download_url,
-                "path" : path,
-                "size" : -1,
-            }
+        _resolve_file(path, download_url, checksum)
 
     res = try_get("files/{}".format(launcher_game_id))
     if res.status_code == requests.codes.ok:
-        meta = res.json()
-        top_key = list(meta.keys())[0]
-        for path, keys in meta[top_key].items():
+        manifest = res.json()
+        top_key = list(manifest.keys())[0]
+        for path, keys in manifest[top_key].items():
             download_url = keys["path"]
             checksum = keys["checksum"]
 
-            if os.path.exists(path):
-                local_checksum = calc_file_checksum(path)
-                if checksum != local_checksum:
-                    update_list[path] = {
-                        "url" : download_url,
-                        "path" : path,
-                        "size" : -1,
-                    }
-                    #logging.info("Different file: {}".format(path))
-                    if path in existing_list:
-                        del existing_list[path]
-                else:
-                    existing_list[path] = {
-                        "url" : download_url,
-                        "path" : path,
-                    }
-            else:
-                #logging.info("Missing file: {}".format(path))
-                update_list[path] = {
-                    "url" : download_url,
-                    "path" : path,
-                    "size" : -1,
-                }
+            _resolve_file(path, download_url, checksum)
     update_list = list(update_list.values())
 
     if len(update_list) == 0:
         return update_list, existing_list
 
     m = mirrors[0]
-    urls = [urljoin(m, "download?path=" + up["url"]) for up in update_list]
+    urls = [urljoin(m, "download?path=" + up["server_path"]) for up in update_list]
 
     # Get all sizes in parallel, so it doesn't fetch them forever
     def get_size(url):
@@ -174,37 +162,3 @@ def get_update_list(launcher_game_id):
         update_list[i]["size"] = size
 
     return update_list, existing_list
-
-
-# TODO: separate module
-
-from sys import argv
-from hashlib import sha1
-from io import BytesIO
-
-class githash(object):
-    def __init__(self):
-        self.buf = BytesIO()
-
-    def update(self, data):
-        self.buf.write(data)
-
-    def hexdigest(self):
-        data = self.buf.getvalue()
-        h = sha1()
-        h.update(("blob %u\0" % len(data)).encode())
-        h.update(data)
-
-        return h.hexdigest()
-
-def githash_data(data):
-    h = githash()
-    h.update(data)
-    return h.hexdigest()
-
-def githash_fileobj(fileobj):
-    return githash_data(fileobj.read())
-
-def calc_file_checksum(path):
-    fileobj = open(path, "rb")
-    return githash_fileobj(fileobj)
