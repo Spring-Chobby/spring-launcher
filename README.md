@@ -1,3 +1,6 @@
+# Deprecation
+This Python + Qt launcher was an early solution for a Spring game distribution launcher and has been deprecated in favor of https://github.com/gajop/spring-launcher, an Electron solution
+
 # Launcher
 A wrapper for Spring to distribute and launch Spring games and Lua lobbies.
 
